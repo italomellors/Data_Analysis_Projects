@@ -1,2 +1,15 @@
-# Data_Analysis_Projects
- My projects of Data Analysis
+# Data Analysis Portfolio Projects
+
+- [01 Supermarket Sales Analysis](01-supermarket-sales-analysis/README.md)
+- [02 Enem Data Analysis](02-enem-data-analysis/README.md)
+- [03 Airbnb Sao Paulo](03-airbnb-sao-paulo/README.md)
+- [04 Personal Finance Dashboard](04-personal-finance-dashboard/README.md)
+- [05 Sales Indicators Dashboard](05-sales-indicators-dashboard/README.md)
+- [06 Customer Churn Prediction](06-customer-churn-prediction/README.md)
+- [07 Fraud Detection](07-fraud-detection/README.md)
+- [08 Hr Sql Queries](08-hr-sql-queries/README.md)
+- [09 Ecommerce Sql Analysis](09-ecommerce-sql-analysis/README.md)
+- [10 Imdb Web Scraping](10-imdb-web-scraping/README.md)
+- [11 Weather Api Analysis](11-weather-api-analysis/README.md)
+- [12 Public Transportation Analysis](12-public-transportation-analysis/README.md)
+- [13 Real Estate Market Study](13-real-estate-market-study/README.md)
