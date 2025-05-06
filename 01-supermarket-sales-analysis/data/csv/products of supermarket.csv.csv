@@ -1,0 +1,101 @@
+Order,Item,Category,Stock,Type,Purchase Price (USD),Sale Price (USD)
+1,Rice,Basic Foods,120,5kg pack,3.32,4.38
+2,Beans,Basic Foods,95,1kg pack,1.49,2.11
+3,Pasta,Basic Foods,150,500g pack,0.56,0.97
+4,Soybean Oil,Basic Foods,80,900ml bottle,1.20,1.74
+5,Sugar,Basic Foods,110,1kg pack,0.76,1.14
+6,Salt,Basic Foods,200,1kg pack,0.26,0.53
+7,Wheat Flour,Basic Foods,75,1kg pack,0.74,1.20
+8,Cornmeal,Basic Foods,60,500g pack,0.62,1.04
+9,Milk,Dairy,180,1L carton,0.72,1.14
+10,Butter,Dairy,65,200g block,1.56,2.37
+11,Margarine,Dairy,70,500g block,1.20,1.85
+12,Mozzarella Cheese,Dairy,45,100g slice,0.44,0.79
+13,Yogurt,Dairy,90,170g cup,0.32,0.62
+14,Cream Cheese,Dairy,55,200g tub,0.91,1.56
+15,Heavy Cream,Dairy,50,200ml box,0.69,1.14
+16,Condensed Milk,Dairy,40,395g can,1.14,1.76
+17,French Bread,Bakery,200,Unit,0.06,0.18
+18,Sliced Bread,Bakery,45,500g pack,1.44,2.27
+19,Cake,Bakery,15,Slice,0.32,0.79
+20,Toast,Bakery,30,200g pack,0.79,1.41
+21,Ham,Deli,25,100g slice,0.67,1.23
+22,Bologna,Deli,30,100g slice,0.51,0.97
+23,Chicken Breast,Meats,35,1kg tray,2.79,4.02
+24,Ground Beef,Meats,20,500g tray,3.25,4.73
+25,Pork Chop,Meats,15,1kg tray,4.02,5.78
+26,Eggs,Meats/Deli,240,Dozen,1.56,2.62
+27,Calabrese Sausage,Deli,18,500g pack,2.20,3.50
+28,Frozen Fish,Meats,12,1kg pack,4.38,6.49
+29,Lettuce,Produce,50,Bunch,0.21,0.62
+30,Tomato,Produce,60,Kg,0.79,1.56
+31,Onion,Produce,70,Kg,0.56,1.14
+32,Garlic,Produce,40,100g head,0.49,0.97
+33,Potato,Produce,85,Kg,0.62,1.21
+34,Carrot,Produce,45,Kg,0.51,1.04
+35,Beetroot,Produce,30,Kg,0.56,1.09
+36,Kale,Produce,35,Bunch,0.26,0.69
+37,Banana,Produce,120,Dozen,0.62,1.39
+38,Apple,Produce,65,Kg,1.21,2.27
+39,Orange,Produce,90,Dozen,0.79,1.74
+40,Lemon,Produce,80,Kg,0.69,1.49
+41,Papaya,Produce,25,Unit,1.04,2.27
+42,Avocado,Produce,20,Unit,0.79,1.74
+43,Orange Juice,Beverages,40,1L carton,1.04,1.92
+44,Soda,Beverages,120,2L bottle,1.14,2.09
+45,Mineral Water,Beverages,162,600ml bottle,0.31,0.70
+46,Beer,Beverages,90,350ml can,0.51,1.14
+47,Coffee,Beverages,60,500g pack,2.27,3.50
+48,Tea,Beverages,45,10-unit box,0.69,1.39
+49,Chocolate Powder,Beverages,35,400g jar,1.56,2.79
+50,Laundry Detergent,Cleaning,50,1kg pack,2.27,3.50
+51,Dish Soap,Cleaning,70,500ml bottle,0.44,0.97
+52,Disinfectant,Cleaning,40,1L bottle,1.04,1.92
+53,Bleach,Cleaning,55,1L bottle,0.56,1.14
+54,Fabric Softener,Cleaning,45,1L bottle,1.56,2.62
+55,Dish Sponge,Cleaning,60,Unit,0.21,0.62
+56,Broom,Cleaning,15,Unit,3.32,5.26
+57,Squeegee,Cleaning,12,Unit,2.79,4.38
+58,Floor Cloths,Cleaning,25,2-unit pack,1.74,2.97
+59,Soap,Personal Care,80,Unit,0.26,0.69
+60,Shampoo,Personal Care,45,200ml bottle,1.56,2.79
+61,Conditioner,Personal Care,40,200ml bottle,1.74,2.97
+62,Toothpaste,Personal Care,65,90g tube,0.69,1.39
+63,Toothbrush,Personal Care,30,Unit,0.86,1.74
+64,Toilet Paper,Personal Care,75,4-roll pack,1.56,2.79
+65,Deodorant,Personal Care,50,100ml bottle,1.74,2.97
+66,Sanitary Pad,Personal Care,40,8-unit pack,1.21,2.27
+67,Dental Floss,Personal Care,25,Unit,0.69,1.39
+68,Razor Blades,Personal Care,20,3-unit pack,2.27,3.50
+69,Filled Cookies,Snacks,55,130g pack,0.51,1.04
+70,Salted Crackers,Snacks,60,200g pack,0.69,1.32
+71,Water Crackers,Snacks,45,200g pack,0.62,1.21
+72,Microwave Popcorn,Snacks,30,100g pack,0.51,1.14
+73,Potato Chips,Snacks,65,80g pack,0.33,0.97
+74,Chocolate Bar,Snacks/Desserts,40,90g bar,0.69,1.39
+75,Assorted Candies,Snacks/Desserts,120,100g pack,0.44,1.04
+76,Gelatin,Snacks/Desserts,35,40g box,0.26,0.69
+77,Ice Cream,Snacks/Desserts,25,1.5L tub,3.32,5.26
+78,Tomato Sauce,Ready Foods,50,340g pouch,0.51,1.14
+79,Tomato Paste,Ready Foods,45,350g can,0.62,1.32
+80,Canned Corn/Peas,Ready Foods,60,200g can,0.51,1.04
+81,Canned Sardines,Ready Foods,40,125g can,0.69,1.39
+82,Canned Tuna,Ready Foods,35,170g can,1.21,2.27
+83,Mayonnaise,Ready Foods,30,500g jar,1.04,1.92
+84,Ketchup,Ready Foods,40,380g bottle,0.86,1.74
+85,Mustard,Ready Foods,25,200g bottle,0.69,1.39
+86,Seasoning Mix,Ready Foods,55,50g pack,0.33,0.79
+87,Bouillon Cube,Ready Foods,65,57g cube,0.21,0.62
+88,Cake Mix,Ready Foods,20,400g pack,0.86,1.74
+89,Pancake Mix,Ready Foods,15,200g pack,0.69,1.39
+90,Napkins,Utensils/Disposables,80,50-unit pack,0.69,1.39
+91,Trash Bags,Utensils/Disposables,45,30-unit roll,1.56,2.79
+92,Aluminum Foil,Utensils/Disposables,30,15m roll,1.04,1.92
+93,Plastic Wrap,Utensils/Disposables,35,15m roll,1.21,2.27
+94,Disposable Plates,Utensils/Disposables,50,10-unit pack,0.86,1.74
+95,Disposable Cups,Utensils/Disposables,60,20-unit pack,1.04,2.09
+96,Candles,Utensils/Disposables,25,3-unit pack,0.69,1.56
+97,Batteries,Household Items,40,2-unit pack,1.04,2.09
+98,Lighter/Match,Household Items,50,Unit,0.26,0.69
+99,Dog Food,Pet,30,1kg pack,2.27,3.50
+100,Cat Litter,Pet,20,4kg bag,3.32,5.26
