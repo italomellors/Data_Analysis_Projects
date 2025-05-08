@@ -1,0 +1,3968 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>270ab68dd6c54d749fd3b8be482de2e5</title>
+  
+
+<style>
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+  line-height: 1.6;
+  padding: 2em;
+  max-width: 1200px;
+  margin: auto;
+}
+h1, h2, h3 {
+  color: #2c3e50;
+}
+table {
+  margin: 2em auto;
+  border-collapse: collapse;
+  width: 95%;
+  max-width: 100%;
+  font-variant-numeric: lining-nums tabular-nums;
+  display: table;
+  overflow-x: auto;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+th {
+  background-color: #3498db;
+  color: white;
+  padding: 0.75em;
+  text-align: center;
+}
+td {
+  border: 1px solid #ddd;
+  padding: 0.6em;
+  text-align: center;
+}
+.dataframe {
+  margin: 2em auto;
+  width: 95%;
+  overflow-x: auto;
+  display: block;
+  max-width: 100%;
+}
+div.output pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-x: auto;
+  max-width: 100%;
+}
+</style>
+
+
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<section
+id="-super-market---análise-de-dados-com-python-google-colab-e-sqlite"
+class="cell markdown" id="0lB8yDg-YG1q">
+<h1>🛒 Super Market - Análise de Dados com Python, Google Colab e
+SQLite</h1>
+<p>Este projeto apresenta uma análise de dados de supermercado
+utilizando <strong>Python em Google Colab</strong>, com
+<strong>persistência dos dados via SQLite</strong> salvo diretamente no
+<strong>Google Drive</strong>.</p>
+<p>Todos os notebooks e arquivos são versionados via
+<strong>GitHub</strong>, permitindo organização, colaboração e histórico
+de alterações.</p>
+<hr />
+<h2 id="️-tecnologias">⚙️ Tecnologias</h2>
+<ul>
+<li>Python (pandas, sqlite3, matplotlib, seaborn)</li>
+<li>Google Colab</li>
+<li>Google Drive (armazenamento do banco de dados)</li>
+<li>SQLite (banco local)</li>
+<li>GitHub (versionamento de código)</li>
+</ul>
+<hr />
+<h2 id="-estrutura-do-projeto">🔗 Estrutura do Projeto</h2>
+<ol>
+<li><strong>Google Drive</strong>: Armazena o banco
+<code>super_market.db</code> de forma persistente.</li>
+<li><strong>SQLite</strong>: Gerencia os dados diretamente pelo
+Colab.</li>
+<li><strong>GitHub</strong>: Guarda o código-fonte e notebooks.</li>
+</ol>
+<hr />
+</section>
+<div class="cell markdown" id="ZuWutt_mrdlY">
+<p>⚙️ <strong>Como executar o notebook no Colab:</strong></p>
+<p>1️⃣ <strong>Executar tudo de uma vez:</strong><br />
+Ideal ao abrir o notebook pela primeira vez.<br />
+Vá em <strong>Ambiente de execução &gt; Executar tudo</strong> ou use o
+atalho <code>Ctrl+F9</code>.</p>
+<p>2️⃣ <strong>Executar a partir de uma célula:</strong><br />
+Útil se você já rodou parte do código e quer continuar.<br />
+Clique na célula desejada e vá em <strong>Ambiente de execução &gt;
+Executar a partir daqui</strong>.</p>
+<p>3️⃣ <strong>Executar manualmente (uma por uma):</strong><br />
+Use <code>Shift+Enter</code> em cada célula para rodar
+individualmente.<br />
+Ótimo para revisar ou testar partes do código.
+____________________________________________________________________</p>
+</div>
+<div class="cell markdown" id="rvz53nxyoGSC">
+<h1 id="-criando-o-banco-de-dados-super_marketdb-">🛢 Criando o banco de
+dados 'super_market.db' 🛒💸💰</h1>
+<h1 id="-iniciando-toda-vez-que-abrir-o-notebook">👨‍💻 Iniciando: toda vez
+que abrir o notebook</h1>
+<p>🌐 1. Montar o Google Drive: drive.mount('/content/drive')</p>
+<p>📁 2. Definir o caminho do banco de dados no Drive</p>
+<p>🔌 3. Conectar ao banco SQLite: con =
+sqlite3.connect(caminho_banco)</p>
+<p>📚 4. Importar as bibliotecas (pandas, sqlite3, os, etc.)</p>
+<p>⚠️ Verifique se o con.close() está comentado no final para evitar
+desconexão durante a execução completa</p>
+<hr />
+</div>
+<div class="cell markdown" id="9orghBPMc0xE">
+<p><strong>🌐Etapa 1 - Montar o Google Drive (sempre ao abrir o
+notebook)</strong> : Conecta seu Google Drive ao Colab para acessar e
+salvar arquivos diretamente, como o banco de dados SQLite.</p>
+</div>
+<div class="cell code" data-execution_count="1"
+data-colab="{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}"
+id="a8lU7GE6dfS7" data-outputId="c4a4328f-34b0-454d-bad7-6dffc8928bb2">
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> google.colab <span class="im">import</span> drive  <span class="co"># Importa a função para conectar o Google Drive no Colab</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>drive.mount(<span class="st">&#39;/content/drive&#39;</span>)   <span class="co"># Monta o Drive no diretório /content/drive para acesso aos arquivos</span></span></code></pre></div>
+<div class="output stream stdout">
+<pre><code>Drive already mounted at /content/drive; to attempt to forcibly remount, call drive.mount(&quot;/content/drive&quot;, force_remount=True).
+</code></pre>
+</div>
+</div>
+<div class="cell markdown" id="MKyBqUtzYSAS">
+<p>🗂️ <strong>Etapa 2 – Definir o caminho do banco de dados no Drive
+(sempre após montar o Drive):</strong><br />
+Especificamos o caminho onde o arquivo <code>super_market.db</code> será
+salvo e garantimos que a pasta exista no Google Drive.</p>
+</div>
+<div class="cell code" data-execution_count="2" id="BFTf1Xa0ZqRq">
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os  <span class="co"># Biblioteca para manipular caminhos e pastas no sistema operacional</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>caminho_banco <span class="op">=</span> <span class="st">&#39;/content/drive/MyDrive/Colab Notebooks/super_market/super_market.db&#39;</span>  <span class="co"># Caminho completo do banco no Drive</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>os.makedirs(os.path.dirname(caminho_banco), exist_ok<span class="op">=</span><span class="va">True</span>)  <span class="co"># Cria a pasta se ainda não existir</span></span></code></pre></div>
+</div>
+<div class="cell markdown" id="hGhBx4ojaTDD">
+<p>🛢 <strong>Etapa 3 – Conectar ao banco SQLite (sempre após definir o
+caminho):</strong> Estabelece a conexão com o banco de dados
+<code>super_market.db</code> no Drive.Se o arquivo não existir, será
+criado automaticamente.</p>
+</div>
+<div class="cell code" data-execution_count="3" id="t4oM5e8YbusM">
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sqlite3  <span class="co"># Biblioteca para trabalhar com bancos SQLite em Python</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>con <span class="op">=</span> sqlite3.<span class="ex">connect</span>(caminho_banco) <span class="co"># Conecta ao banco usando o caminho definido</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>cursor <span class="op">=</span> con.cursor() <span class="co"># Cria um cursor para executar comandos SQL</span></span></code></pre></div>
+</div>
+<div class="cell markdown" id="ENzlp6SqfTxM">
+<p>📚 <strong>Etapa 4 - Importando bibliotecas
+essenciais:</strong><br />
+Estas bibliotecas são utilizadas ao longo do notebook para análise,
+visualização e manipulação de dados.</p>
+</div>
+<div class="cell code" data-execution_count="4" id="Mb-FgccMcPhE">
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Lista de bibiliotecas python</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd               <span class="co"># Manipulação de dados com DataFrames</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sqlite3                    <span class="co"># Conexão e comandos SQL com banco SQLite</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> csv                        <span class="co"># Leitura e escrita de arquivos CSV</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> os                         <span class="co"># Operações com arquivos e diretórios</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> matplotlib.pyplot <span class="im">as</span> plt   <span class="co"># Visualização de dados</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> seaborn <span class="im">as</span> sns             <span class="co"># Visualização de dados</span></span></code></pre></div>
+</div>
+<div class="cell markdown" id="Qe4RZhyaodpL">
+<hr />
+<h1 id="-realizando-alterações-no-banco-de-dados-️">🛢 Realizando
+alterações no Banco de dados ⚙️</h1>
+<ul>
+<li>Criar, consultar, inserir, atualizar e excluir dados</li>
+<li>Usar pandas, seaborn, matplotlib para análises e visualizações</li>
+<li>Sempre que fizer mudanças no banco, execute: con.commit()</li>
+</ul>
+<p><strong>🚫 O que você não precisa executar sempre:</strong></p>
+<ul>
+<li>Criar tabelas já existentes</li>
+<li>Inserir dados duplicados</li>
+<li><h2 id="clonar-github-se-já-foi-feito-nesta-sessão">Clonar GitHub se
+já foi feito nesta sessão</h2></li>
+</ul>
+</div>
+<div class="cell markdown" id="sDas_xkfgn1t">
+<p>𝄜 <strong>Criando a tabela <code>Products</code>:</strong><br />
+Tabela usada para armazenar os produtos disponíveis no sistema.<br />
+Inclui dados como nome do item, categoria, estoque, tipo e preços de
+compra/venda.<br />
+A coluna <code>OrderID</code> funciona como identificador único para
+cada produto.</p>
+</div>
+<div class="cell code" data-execution_count="5" id="b1TPNIriVvO4">
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>cursor.execute(<span class="st">&quot;&quot;&quot;</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="st">    CREATE TABLE IF NOT EXISTS Products (</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="st">        OrderID INTEGER PRIMARY KEY AUTOINCREMENT,</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="st">        Item TEXT NOT NULL,</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="st">        Category TEXT,</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="st">        Stock INTEGER DEFAULT 0,</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="st">        Type TEXT,</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="st">        Purchase_Price REAL NOT NULL,</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="st">        Sale_Price REAL CHECK(Sale_Price &gt;= 0)</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="st">    )</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;&quot;&quot;</span>)</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>con.commit()  <span class="co"># 💾 Salva a criação da tabela no banco</span></span></code></pre></div>
+</div>
+<div class="cell markdown" id="RDOusKtOwk9S">
+<p>🔍 Consultar tabelas existentes no banco: Usado para verificar quais
+tabelas já foram criadas no banco de dados SQLite.</p>
+</div>
+<div class="cell code" data-execution_count="6"
+data-colab="{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}"
+id="7a362k_gjd6z" data-outputId="851e1e3d-e54e-4558-b205-4df209593031">
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>result <span class="op">=</span> cursor.execute(<span class="st">&quot;SELECT name FROM sqlite_master WHERE type=&#39;table&#39;&quot;</span>)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>result.fetchall()</span></code></pre></div>
+<div class="output execute_result" data-execution_count="6">
+<pre><code>[(&#39;Products&#39;,), (&#39;sqlite_sequence&#39;,)]</code></pre>
+</div>
+</div>
+<div class="cell markdown" id="5XE5ALz852O4">
+<p>📑 <strong>Importar e Ler o CSV com pandas</strong><br />
+Nesta etapa, usamos o pandas para ler o arquivo CSV com os dados dos
+produtos que serão inseridos no banco de dados.</p>
+</div>
+<div class="cell code" data-execution_count="7"
+data-colab="{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;,&quot;height&quot;:206}"
+id="lMBM9eQY41eh" data-outputId="8380aed5-643f-4490-cc8a-2a12d17f31f6">
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Lendo o CSV</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">&#39;/content/drive/MyDrive/Colab Notebooks/super_market/products_supermarket.csv&#39;</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Visualiza as primeiras linhas</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>df.head(<span class="dv">5</span>)</span></code></pre></div>
+<div class="output execute_result" data-execution_count="7">
+
+  <div id="df-f590532d-efe9-40ea-8a0b-39623d20a63a" class="colab-df-container">
+    <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Order</th>
+      <th>Item</th>
+      <th>Category</th>
+      <th>Stock</th>
+      <th>Type</th>
+      <th>Purchase Price (USD)</th>
+      <th>Sale Price (USD)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>Rice</td>
+      <td>Basic Foods</td>
+      <td>120</td>
+      <td>5kg pack</td>
+      <td>3.32</td>
+      <td>4.38</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>Beans</td>
+      <td>Basic Foods</td>
+      <td>95</td>
+      <td>1kg pack</td>
+      <td>1.49</td>
+      <td>2.11</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3</td>
+      <td>Pasta</td>
+      <td>Basic Foods</td>
+      <td>150</td>
+      <td>500g pack</td>
+      <td>0.56</td>
+      <td>0.97</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4</td>
+      <td>Soybean Oil</td>
+      <td>Basic Foods</td>
+      <td>80</td>
+      <td>900ml bottle</td>
+      <td>1.20</td>
+      <td>1.74</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5</td>
+      <td>Sugar</td>
+      <td>Basic Foods</td>
+      <td>110</td>
+      <td>1kg pack</td>
+      <td>0.76</td>
+      <td>1.14</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+    <div class="colab-df-buttons">
+
+  <div class="colab-df-container">
+    <button class="colab-df-convert" onclick="convertToInteractive('df-f590532d-efe9-40ea-8a0b-39623d20a63a')"
+            title="Convert this dataframe to an interactive table."
+            style="display:none;">
+
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960">
+    <path d="M120-120v-720h720v720H120Zm60-500h600v-160H180v160Zm220 220h160v-160H400v160Zm0 220h160v-160H400v160ZM180-400h160v-160H180v160Zm440 0h160v-160H620v160ZM180-180h160v-160H180v160Zm440 0h160v-160H620v160Z"/>
+  </svg>
+    </button>
+
+  
+
+<style>
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+  line-height: 1.6;
+  padding: 2em;
+  max-width: 1200px;
+  margin: auto;
+}
+h1, h2, h3 {
+  color: #2c3e50;
+}
+table {
+  margin: 2em auto;
+  border-collapse: collapse;
+  width: 95%;
+  max-width: 100%;
+  font-variant-numeric: lining-nums tabular-nums;
+  display: table;
+  overflow-x: auto;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+th {
+  background-color: #3498db;
+  color: white;
+  padding: 0.75em;
+  text-align: center;
+}
+td {
+  border: 1px solid #ddd;
+  padding: 0.6em;
+  text-align: center;
+}
+.dataframe {
+  margin: 2em auto;
+  width: 95%;
+  overflow-x: auto;
+  display: block;
+  max-width: 100%;
+}
+div.output pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-x: auto;
+  max-width: 100%;
+}
+</style>
+
+
+
+    <script>
+      const buttonEl =
+        document.querySelector('#df-f590532d-efe9-40ea-8a0b-39623d20a63a button.colab-df-convert');
+      buttonEl.style.display =
+        google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+      async function convertToInteractive(key) {
+        const element = document.querySelector('#df-f590532d-efe9-40ea-8a0b-39623d20a63a');
+        const dataTable =
+          await google.colab.kernel.invokeFunction('convertToInteractive',
+                                                    [key], {});
+        if (!dataTable) return;
+
+        const docLinkHtml = 'Like what you see? Visit the ' +
+          '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
+          + ' to learn more about interactive tables.';
+        element.innerHTML = '';
+        dataTable['output_type'] = 'display_data';
+        await google.colab.output.renderOutput(dataTable, element);
+        const docLink = document.createElement('div');
+        docLink.innerHTML = docLinkHtml;
+        element.appendChild(docLink);
+      }
+    </script>
+  </div>
+
+
+    <div id="df-af20c563-e7b7-4d46-a3c2-6c6ece7098a6">
+      <button class="colab-df-quickchart" onclick="quickchart('df-af20c563-e7b7-4d46-a3c2-6c6ece7098a6')"
+                title="Suggest charts"
+                style="display:none;">
+
+<svg xmlns="http://www.w3.org/2000/svg" height="24px"viewBox="0 0 24 24"
+     width="24px">
+    <g>
+        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+    </g>
+</svg>
+      </button>
+
+
+
+<style>
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+  line-height: 1.6;
+  padding: 2em;
+  max-width: 1200px;
+  margin: auto;
+}
+h1, h2, h3 {
+  color: #2c3e50;
+}
+table {
+  margin: 2em auto;
+  border-collapse: collapse;
+  width: 95%;
+  max-width: 100%;
+  font-variant-numeric: lining-nums tabular-nums;
+  display: table;
+  overflow-x: auto;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+th {
+  background-color: #3498db;
+  color: white;
+  padding: 0.75em;
+  text-align: center;
+}
+td {
+  border: 1px solid #ddd;
+  padding: 0.6em;
+  text-align: center;
+}
+.dataframe {
+  margin: 2em auto;
+  width: 95%;
+  overflow-x: auto;
+  display: block;
+  max-width: 100%;
+}
+div.output pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-x: auto;
+  max-width: 100%;
+}
+</style>
+
+
+
+      <script>
+        async function quickchart(key) {
+          const quickchartButtonEl =
+            document.querySelector('#' + key + ' button');
+          quickchartButtonEl.disabled = true;  // To prevent multiple clicks.
+          quickchartButtonEl.classList.add('colab-df-spinner');
+          try {
+            const charts = await google.colab.kernel.invokeFunction(
+                'suggestCharts', [key], {});
+          } catch (error) {
+            console.error('Error during call to suggestCharts:', error);
+          }
+          quickchartButtonEl.classList.remove('colab-df-spinner');
+          quickchartButtonEl.classList.add('colab-df-quickchart-complete');
+        }
+        (() => {
+          let quickchartButtonEl =
+            document.querySelector('#df-af20c563-e7b7-4d46-a3c2-6c6ece7098a6 button');
+          quickchartButtonEl.style.display =
+            google.colab.kernel.accessAllowed ? 'block' : 'none';
+        })();
+      </script>
+    </div>
+
+    </div>
+  </div>
+
+</div>
+</div>
+<div class="cell markdown" id="ICysch356anv">
+<p>🛠️ <strong>Renomear colunas para combinar com a tabela
+SQL</strong><br />
+Renomeamos as colunas do DataFrame para garantir que os nomes sejam
+exatamente os mesmos da tabela criada no banco SQLite.</p>
+</div>
+<div class="cell code" data-execution_count="8" id="rdBnLHyf6lFe">
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>df.rename(columns<span class="op">=</span>{</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;Order&#39;</span>: <span class="st">&#39;OrderID&#39;</span>,</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;Purchase Price (USD)&#39;</span>: <span class="st">&#39;Purchase_Price&#39;</span>,</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&#39;Sale Price (USD)&#39;</span>: <span class="st">&#39;Sale_Price&#39;</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>}, inplace<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>con.commit()</span></code></pre></div>
+</div>
+<div class="cell markdown" id="ahyimvDu7gpW">
+<p>🔎 <strong>Verificar se as colunas estão corretas</strong><br />
+Antes de importar os dados, exibimos os nomes das colunas e as primeiras
+linhas do DataFrame para conferir se está tudo certo.</p>
+</div>
+<div class="cell code" data-execution_count="9"
+data-colab="{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;,&quot;height&quot;:224}"
+id="BydwGBiO8m4n" data-outputId="bb5bf235-ceda-4a76-90ce-933c23180e22">
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;Colunas do DataFrame:&quot;</span>, df.columns.tolist())</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>df.head()</span></code></pre></div>
+<div class="output stream stdout">
+<pre><code>Colunas do DataFrame: [&#39;OrderID&#39;, &#39;Item&#39;, &#39;Category&#39;, &#39;Stock&#39;, &#39;Type&#39;, &#39;Purchase_Price&#39;, &#39;Sale_Price&#39;]
+</code></pre>
+</div>
+<div class="output execute_result" data-execution_count="9">
+
+  <div id="df-e136dee0-e855-4b18-ab12-4660a090a645" class="colab-df-container">
+    <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>OrderID</th>
+      <th>Item</th>
+      <th>Category</th>
+      <th>Stock</th>
+      <th>Type</th>
+      <th>Purchase_Price</th>
+      <th>Sale_Price</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>Rice</td>
+      <td>Basic Foods</td>
+      <td>120</td>
+      <td>5kg pack</td>
+      <td>3.32</td>
+      <td>4.38</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>Beans</td>
+      <td>Basic Foods</td>
+      <td>95</td>
+      <td>1kg pack</td>
+      <td>1.49</td>
+      <td>2.11</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3</td>
+      <td>Pasta</td>
+      <td>Basic Foods</td>
+      <td>150</td>
+      <td>500g pack</td>
+      <td>0.56</td>
+      <td>0.97</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4</td>
+      <td>Soybean Oil</td>
+      <td>Basic Foods</td>
+      <td>80</td>
+      <td>900ml bottle</td>
+      <td>1.20</td>
+      <td>1.74</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5</td>
+      <td>Sugar</td>
+      <td>Basic Foods</td>
+      <td>110</td>
+      <td>1kg pack</td>
+      <td>0.76</td>
+      <td>1.14</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+    <div class="colab-df-buttons">
+
+  <div class="colab-df-container">
+    <button class="colab-df-convert" onclick="convertToInteractive('df-e136dee0-e855-4b18-ab12-4660a090a645')"
+            title="Convert this dataframe to an interactive table."
+            style="display:none;">
+
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960">
+    <path d="M120-120v-720h720v720H120Zm60-500h600v-160H180v160Zm220 220h160v-160H400v160Zm0 220h160v-160H400v160ZM180-400h160v-160H180v160Zm440 0h160v-160H620v160ZM180-180h160v-160H180v160Zm440 0h160v-160H620v160Z"/>
+  </svg>
+    </button>
+
+  
+
+<style>
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+  line-height: 1.6;
+  padding: 2em;
+  max-width: 1200px;
+  margin: auto;
+}
+h1, h2, h3 {
+  color: #2c3e50;
+}
+table {
+  margin: 2em auto;
+  border-collapse: collapse;
+  width: 95%;
+  max-width: 100%;
+  font-variant-numeric: lining-nums tabular-nums;
+  display: table;
+  overflow-x: auto;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+th {
+  background-color: #3498db;
+  color: white;
+  padding: 0.75em;
+  text-align: center;
+}
+td {
+  border: 1px solid #ddd;
+  padding: 0.6em;
+  text-align: center;
+}
+.dataframe {
+  margin: 2em auto;
+  width: 95%;
+  overflow-x: auto;
+  display: block;
+  max-width: 100%;
+}
+div.output pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-x: auto;
+  max-width: 100%;
+}
+</style>
+
+
+
+    <script>
+      const buttonEl =
+        document.querySelector('#df-e136dee0-e855-4b18-ab12-4660a090a645 button.colab-df-convert');
+      buttonEl.style.display =
+        google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+      async function convertToInteractive(key) {
+        const element = document.querySelector('#df-e136dee0-e855-4b18-ab12-4660a090a645');
+        const dataTable =
+          await google.colab.kernel.invokeFunction('convertToInteractive',
+                                                    [key], {});
+        if (!dataTable) return;
+
+        const docLinkHtml = 'Like what you see? Visit the ' +
+          '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
+          + ' to learn more about interactive tables.';
+        element.innerHTML = '';
+        dataTable['output_type'] = 'display_data';
+        await google.colab.output.renderOutput(dataTable, element);
+        const docLink = document.createElement('div');
+        docLink.innerHTML = docLinkHtml;
+        element.appendChild(docLink);
+      }
+    </script>
+  </div>
+
+
+    <div id="df-932448de-33c1-422d-bea1-7c238faff505">
+      <button class="colab-df-quickchart" onclick="quickchart('df-932448de-33c1-422d-bea1-7c238faff505')"
+                title="Suggest charts"
+                style="display:none;">
+
+<svg xmlns="http://www.w3.org/2000/svg" height="24px"viewBox="0 0 24 24"
+     width="24px">
+    <g>
+        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+    </g>
+</svg>
+      </button>
+
+
+
+<style>
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+  line-height: 1.6;
+  padding: 2em;
+  max-width: 1200px;
+  margin: auto;
+}
+h1, h2, h3 {
+  color: #2c3e50;
+}
+table {
+  margin: 2em auto;
+  border-collapse: collapse;
+  width: 95%;
+  max-width: 100%;
+  font-variant-numeric: lining-nums tabular-nums;
+  display: table;
+  overflow-x: auto;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+th {
+  background-color: #3498db;
+  color: white;
+  padding: 0.75em;
+  text-align: center;
+}
+td {
+  border: 1px solid #ddd;
+  padding: 0.6em;
+  text-align: center;
+}
+.dataframe {
+  margin: 2em auto;
+  width: 95%;
+  overflow-x: auto;
+  display: block;
+  max-width: 100%;
+}
+div.output pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-x: auto;
+  max-width: 100%;
+}
+</style>
+
+
+
+      <script>
+        async function quickchart(key) {
+          const quickchartButtonEl =
+            document.querySelector('#' + key + ' button');
+          quickchartButtonEl.disabled = true;  // To prevent multiple clicks.
+          quickchartButtonEl.classList.add('colab-df-spinner');
+          try {
+            const charts = await google.colab.kernel.invokeFunction(
+                'suggestCharts', [key], {});
+          } catch (error) {
+            console.error('Error during call to suggestCharts:', error);
+          }
+          quickchartButtonEl.classList.remove('colab-df-spinner');
+          quickchartButtonEl.classList.add('colab-df-quickchart-complete');
+        }
+        (() => {
+          let quickchartButtonEl =
+            document.querySelector('#df-932448de-33c1-422d-bea1-7c238faff505 button');
+          quickchartButtonEl.style.display =
+            google.colab.kernel.accessAllowed ? 'block' : 'none';
+        })();
+      </script>
+    </div>
+
+    </div>
+  </div>
+
+</div>
+</div>
+<div class="cell markdown" id="tfK1uJHv9GNe">
+<p>🧩 <strong>Inserir dados no banco de dados</strong><br />
+Percorremos cada linha do DataFrame e inserimos os dados na tabela
+<code>Products</code>, usando `INSERT OR IGNORE INTO</p>
+</div>
+<div class="cell code" data-execution_count="10" id="PjRraJh09gdX">
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> _, row <span class="kw">in</span> df.iterrows():</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    cursor.execute(<span class="st">&quot;&quot;&quot;</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="st">        INSERT OR IGNORE INTO Products (OrderID, Item, Category, Stock, Type, Purchase_Price, Sale_Price)</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="st">        VALUES (?, ?, ?, ?, ?, ?, ?)</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="st">    &quot;&quot;&quot;</span>, <span class="bu">tuple</span>(row))</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>con.commit()</span></code></pre></div>
+</div>
+<div class="cell markdown" id="Y7wUmYCCI_QT">
+<p>🧐 <strong>Verificar dados salvos da tabela no banco</strong><br />
+consulta na tabela para exibir os dados já inseridos e garantir que o
+processo de importação foi bem-sucedido.</p>
+</div>
+<div class="cell code" data-execution_count="26"
+data-colab="{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;,&quot;height&quot;:206}"
+id="v6-QQSc9JhCb" data-outputId="eeac1b75-ca75-46e6-d984-2af824f5ffa9">
+<div class="sourceCode" id="cb14"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>df_produtos <span class="op">=</span> pd.read_sql_query(<span class="st">&quot;SELECT * FROM Products&quot;</span>, con)</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>df_produtos.head()  <span class="co"># Mostra as 5 primeiras linhas</span></span></code></pre></div>
+<div class="output execute_result" data-execution_count="26">
+
+  <div id="df-a4c80757-915b-4a34-b592-0f320aafc8ad" class="colab-df-container">
+    <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>OrderID</th>
+      <th>Item</th>
+      <th>Category</th>
+      <th>Stock</th>
+      <th>Type</th>
+      <th>Purchase_Price</th>
+      <th>Sale_Price</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>Rice</td>
+      <td>Basic Foods</td>
+      <td>120</td>
+      <td>5kg pack</td>
+      <td>3.32</td>
+      <td>4.38</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>Beans</td>
+      <td>Basic Foods</td>
+      <td>95</td>
+      <td>1kg pack</td>
+      <td>1.49</td>
+      <td>2.11</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3</td>
+      <td>Pasta</td>
+      <td>Basic Foods</td>
+      <td>150</td>
+      <td>500g pack</td>
+      <td>0.56</td>
+      <td>0.97</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4</td>
+      <td>Soybean Oil</td>
+      <td>Basic Foods</td>
+      <td>80</td>
+      <td>900ml bottle</td>
+      <td>1.20</td>
+      <td>1.74</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5</td>
+      <td>Sugar</td>
+      <td>Basic Foods</td>
+      <td>110</td>
+      <td>1kg pack</td>
+      <td>0.76</td>
+      <td>1.14</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+    <div class="colab-df-buttons">
+
+  <div class="colab-df-container">
+    <button class="colab-df-convert" onclick="convertToInteractive('df-a4c80757-915b-4a34-b592-0f320aafc8ad')"
+            title="Convert this dataframe to an interactive table."
+            style="display:none;">
+
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960">
+    <path d="M120-120v-720h720v720H120Zm60-500h600v-160H180v160Zm220 220h160v-160H400v160Zm0 220h160v-160H400v160ZM180-400h160v-160H180v160Zm440 0h160v-160H620v160ZM180-180h160v-160H180v160Zm440 0h160v-160H620v160Z"/>
+  </svg>
+    </button>
+
+  
+
+<style>
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+  line-height: 1.6;
+  padding: 2em;
+  max-width: 1200px;
+  margin: auto;
+}
+h1, h2, h3 {
+  color: #2c3e50;
+}
+table {
+  margin: 2em auto;
+  border-collapse: collapse;
+  width: 95%;
+  max-width: 100%;
+  font-variant-numeric: lining-nums tabular-nums;
+  display: table;
+  overflow-x: auto;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+th {
+  background-color: #3498db;
+  color: white;
+  padding: 0.75em;
+  text-align: center;
+}
+td {
+  border: 1px solid #ddd;
+  padding: 0.6em;
+  text-align: center;
+}
+.dataframe {
+  margin: 2em auto;
+  width: 95%;
+  overflow-x: auto;
+  display: block;
+  max-width: 100%;
+}
+div.output pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-x: auto;
+  max-width: 100%;
+}
+</style>
+
+
+
+    <script>
+      const buttonEl =
+        document.querySelector('#df-a4c80757-915b-4a34-b592-0f320aafc8ad button.colab-df-convert');
+      buttonEl.style.display =
+        google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+      async function convertToInteractive(key) {
+        const element = document.querySelector('#df-a4c80757-915b-4a34-b592-0f320aafc8ad');
+        const dataTable =
+          await google.colab.kernel.invokeFunction('convertToInteractive',
+                                                    [key], {});
+        if (!dataTable) return;
+
+        const docLinkHtml = 'Like what you see? Visit the ' +
+          '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
+          + ' to learn more about interactive tables.';
+        element.innerHTML = '';
+        dataTable['output_type'] = 'display_data';
+        await google.colab.output.renderOutput(dataTable, element);
+        const docLink = document.createElement('div');
+        docLink.innerHTML = docLinkHtml;
+        element.appendChild(docLink);
+      }
+    </script>
+  </div>
+
+
+    <div id="df-5c872e98-57ec-41bb-8f39-de5a0095ee1f">
+      <button class="colab-df-quickchart" onclick="quickchart('df-5c872e98-57ec-41bb-8f39-de5a0095ee1f')"
+                title="Suggest charts"
+                style="display:none;">
+
+<svg xmlns="http://www.w3.org/2000/svg" height="24px"viewBox="0 0 24 24"
+     width="24px">
+    <g>
+        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+    </g>
+</svg>
+      </button>
+
+
+
+<style>
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+  line-height: 1.6;
+  padding: 2em;
+  max-width: 1200px;
+  margin: auto;
+}
+h1, h2, h3 {
+  color: #2c3e50;
+}
+table {
+  margin: 2em auto;
+  border-collapse: collapse;
+  width: 95%;
+  max-width: 100%;
+  font-variant-numeric: lining-nums tabular-nums;
+  display: table;
+  overflow-x: auto;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+th {
+  background-color: #3498db;
+  color: white;
+  padding: 0.75em;
+  text-align: center;
+}
+td {
+  border: 1px solid #ddd;
+  padding: 0.6em;
+  text-align: center;
+}
+.dataframe {
+  margin: 2em auto;
+  width: 95%;
+  overflow-x: auto;
+  display: block;
+  max-width: 100%;
+}
+div.output pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-x: auto;
+  max-width: 100%;
+}
+</style>
+
+
+
+      <script>
+        async function quickchart(key) {
+          const quickchartButtonEl =
+            document.querySelector('#' + key + ' button');
+          quickchartButtonEl.disabled = true;  // To prevent multiple clicks.
+          quickchartButtonEl.classList.add('colab-df-spinner');
+          try {
+            const charts = await google.colab.kernel.invokeFunction(
+                'suggestCharts', [key], {});
+          } catch (error) {
+            console.error('Error during call to suggestCharts:', error);
+          }
+          quickchartButtonEl.classList.remove('colab-df-spinner');
+          quickchartButtonEl.classList.add('colab-df-quickchart-complete');
+        }
+        (() => {
+          let quickchartButtonEl =
+            document.querySelector('#df-5c872e98-57ec-41bb-8f39-de5a0095ee1f button');
+          quickchartButtonEl.style.display =
+            google.colab.kernel.accessAllowed ? 'block' : 'none';
+        })();
+      </script>
+    </div>
+
+    </div>
+  </div>
+
+</div>
+</div>
+<div class="cell markdown" id="EKkpmmrnSKJ4">
+<p>💯 Total de Produtos inseridos: A quantidade de produtos, importados
+do '.csv' inseridos na tabela 'Products' do banco de dados
+'super-market.db'</p>
+</div>
+<div class="cell code" data-execution_count="25"
+data-colab="{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}"
+id="e_ewVskNSqs4" data-outputId="ef0958a9-5492-40d9-c3c9-40abe1f70d62">
+<div class="sourceCode" id="cb15"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>df_verificacao <span class="op">=</span> pd.read_sql_query(<span class="st">&quot;SELECT * FROM Products&quot;</span>, con)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&#39;Total de registros inseridos: </span><span class="sc">{</span><span class="bu">len</span>(df_verificacao)<span class="sc">}</span><span class="ss">&#39;</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>total_products_supermarket <span class="op">=</span> <span class="bu">len</span>(df_verificacao)</span></code></pre></div>
+<div class="output stream stdout">
+<pre><code>Total de registros inseridos: 100
+</code></pre>
+</div>
+</div>
+<div class="cell markdown" id="cIVB8XUJBMG1">
+<hr />
+<h1 id="-realizando-consultas-no-banco-de-dados-">🛢 Realizando consultas
+no banco de dados 🔍</h1>
+<p><strong>📑Tabela: Products</strong></p>
+<ul>
+<li>Nesta etapa, realizamos consultas SQL diretamente no banco de dados
+SQLite criado.</li>
+<li>As consultas ajudam a explorar, analisar e extrair informações úteis
+dos dados armazenados,</li>
+<li>facilitando a tomada de decisões e a visualização de padrões.</li>
+<li><h2
+id="abaixo-seguem-consultas-úteis-para-analisar-os-dados-da-tabela">Abaixo,
+seguem consultas úteis para analisar os dados da tabela:</h2></li>
+</ul>
+</div>
+<div class="cell markdown" id="H8w92JmNIWFH">
+<p>🔝 Ver os 10 primeiros produtos</p>
+</div>
+<div class="cell code" data-execution_count="27"
+data-colab="{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;,&quot;height&quot;:363}"
+id="CtHvm88NIuGK" data-outputId="d67cdf0d-1609-4947-ab1b-279ec584f714">
+<div class="sourceCode" id="cb17"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>df_primeiros <span class="op">=</span> pd.read_sql_query(<span class="st">&quot;SELECT * FROM Products ORDER BY OrderID ASC LIMIT 10&quot;</span>, con)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>df_primeiros</span></code></pre></div>
+<div class="output execute_result" data-execution_count="27">
+
+  <div id="df-4b27a3d1-3009-41c6-8a47-35d07c16c741" class="colab-df-container">
+    <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>OrderID</th>
+      <th>Item</th>
+      <th>Category</th>
+      <th>Stock</th>
+      <th>Type</th>
+      <th>Purchase_Price</th>
+      <th>Sale_Price</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>1</td>
+      <td>Rice</td>
+      <td>Basic Foods</td>
+      <td>120</td>
+      <td>5kg pack</td>
+      <td>3.32</td>
+      <td>4.38</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>2</td>
+      <td>Beans</td>
+      <td>Basic Foods</td>
+      <td>95</td>
+      <td>1kg pack</td>
+      <td>1.49</td>
+      <td>2.11</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3</td>
+      <td>Pasta</td>
+      <td>Basic Foods</td>
+      <td>150</td>
+      <td>500g pack</td>
+      <td>0.56</td>
+      <td>0.97</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4</td>
+      <td>Soybean Oil</td>
+      <td>Basic Foods</td>
+      <td>80</td>
+      <td>900ml bottle</td>
+      <td>1.20</td>
+      <td>1.74</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>5</td>
+      <td>Sugar</td>
+      <td>Basic Foods</td>
+      <td>110</td>
+      <td>1kg pack</td>
+      <td>0.76</td>
+      <td>1.14</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>6</td>
+      <td>Salt</td>
+      <td>Basic Foods</td>
+      <td>200</td>
+      <td>1kg pack</td>
+      <td>0.26</td>
+      <td>0.53</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>7</td>
+      <td>Wheat Flour</td>
+      <td>Basic Foods</td>
+      <td>75</td>
+      <td>1kg pack</td>
+      <td>0.74</td>
+      <td>1.20</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>8</td>
+      <td>Cornmeal</td>
+      <td>Basic Foods</td>
+      <td>60</td>
+      <td>500g pack</td>
+      <td>0.62</td>
+      <td>1.04</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>9</td>
+      <td>Milk</td>
+      <td>Dairy</td>
+      <td>180</td>
+      <td>1L carton</td>
+      <td>0.72</td>
+      <td>1.14</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>10</td>
+      <td>Butter</td>
+      <td>Dairy</td>
+      <td>65</td>
+      <td>200g block</td>
+      <td>1.56</td>
+      <td>2.37</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+    <div class="colab-df-buttons">
+
+  <div class="colab-df-container">
+    <button class="colab-df-convert" onclick="convertToInteractive('df-4b27a3d1-3009-41c6-8a47-35d07c16c741')"
+            title="Convert this dataframe to an interactive table."
+            style="display:none;">
+
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960">
+    <path d="M120-120v-720h720v720H120Zm60-500h600v-160H180v160Zm220 220h160v-160H400v160Zm0 220h160v-160H400v160ZM180-400h160v-160H180v160Zm440 0h160v-160H620v160ZM180-180h160v-160H180v160Zm440 0h160v-160H620v160Z"/>
+  </svg>
+    </button>
+
+  
+
+<style>
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+  line-height: 1.6;
+  padding: 2em;
+  max-width: 1200px;
+  margin: auto;
+}
+h1, h2, h3 {
+  color: #2c3e50;
+}
+table {
+  margin: 2em auto;
+  border-collapse: collapse;
+  width: 95%;
+  max-width: 100%;
+  font-variant-numeric: lining-nums tabular-nums;
+  display: table;
+  overflow-x: auto;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+th {
+  background-color: #3498db;
+  color: white;
+  padding: 0.75em;
+  text-align: center;
+}
+td {
+  border: 1px solid #ddd;
+  padding: 0.6em;
+  text-align: center;
+}
+.dataframe {
+  margin: 2em auto;
+  width: 95%;
+  overflow-x: auto;
+  display: block;
+  max-width: 100%;
+}
+div.output pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-x: auto;
+  max-width: 100%;
+}
+</style>
+
+
+
+    <script>
+      const buttonEl =
+        document.querySelector('#df-4b27a3d1-3009-41c6-8a47-35d07c16c741 button.colab-df-convert');
+      buttonEl.style.display =
+        google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+      async function convertToInteractive(key) {
+        const element = document.querySelector('#df-4b27a3d1-3009-41c6-8a47-35d07c16c741');
+        const dataTable =
+          await google.colab.kernel.invokeFunction('convertToInteractive',
+                                                    [key], {});
+        if (!dataTable) return;
+
+        const docLinkHtml = 'Like what you see? Visit the ' +
+          '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
+          + ' to learn more about interactive tables.';
+        element.innerHTML = '';
+        dataTable['output_type'] = 'display_data';
+        await google.colab.output.renderOutput(dataTable, element);
+        const docLink = document.createElement('div');
+        docLink.innerHTML = docLinkHtml;
+        element.appendChild(docLink);
+      }
+    </script>
+  </div>
+
+
+    <div id="df-f5e1c49f-611d-4324-9692-51efea6e998b">
+      <button class="colab-df-quickchart" onclick="quickchart('df-f5e1c49f-611d-4324-9692-51efea6e998b')"
+                title="Suggest charts"
+                style="display:none;">
+
+<svg xmlns="http://www.w3.org/2000/svg" height="24px"viewBox="0 0 24 24"
+     width="24px">
+    <g>
+        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+    </g>
+</svg>
+      </button>
+
+
+
+<style>
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+  line-height: 1.6;
+  padding: 2em;
+  max-width: 1200px;
+  margin: auto;
+}
+h1, h2, h3 {
+  color: #2c3e50;
+}
+table {
+  margin: 2em auto;
+  border-collapse: collapse;
+  width: 95%;
+  max-width: 100%;
+  font-variant-numeric: lining-nums tabular-nums;
+  display: table;
+  overflow-x: auto;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+th {
+  background-color: #3498db;
+  color: white;
+  padding: 0.75em;
+  text-align: center;
+}
+td {
+  border: 1px solid #ddd;
+  padding: 0.6em;
+  text-align: center;
+}
+.dataframe {
+  margin: 2em auto;
+  width: 95%;
+  overflow-x: auto;
+  display: block;
+  max-width: 100%;
+}
+div.output pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-x: auto;
+  max-width: 100%;
+}
+</style>
+
+
+
+      <script>
+        async function quickchart(key) {
+          const quickchartButtonEl =
+            document.querySelector('#' + key + ' button');
+          quickchartButtonEl.disabled = true;  // To prevent multiple clicks.
+          quickchartButtonEl.classList.add('colab-df-spinner');
+          try {
+            const charts = await google.colab.kernel.invokeFunction(
+                'suggestCharts', [key], {});
+          } catch (error) {
+            console.error('Error during call to suggestCharts:', error);
+          }
+          quickchartButtonEl.classList.remove('colab-df-spinner');
+          quickchartButtonEl.classList.add('colab-df-quickchart-complete');
+        }
+        (() => {
+          let quickchartButtonEl =
+            document.querySelector('#df-f5e1c49f-611d-4324-9692-51efea6e998b button');
+          quickchartButtonEl.style.display =
+            google.colab.kernel.accessAllowed ? 'block' : 'none';
+        })();
+      </script>
+    </div>
+
+  <div id="id_491e1295-2e28-43d9-bf65-386aaa9e8f1a">
+    
+
+<style>
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+  line-height: 1.6;
+  padding: 2em;
+  max-width: 1200px;
+  margin: auto;
+}
+h1, h2, h3 {
+  color: #2c3e50;
+}
+table {
+  margin: 2em auto;
+  border-collapse: collapse;
+  width: 95%;
+  max-width: 100%;
+  font-variant-numeric: lining-nums tabular-nums;
+  display: table;
+  overflow-x: auto;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+th {
+  background-color: #3498db;
+  color: white;
+  padding: 0.75em;
+  text-align: center;
+}
+td {
+  border: 1px solid #ddd;
+  padding: 0.6em;
+  text-align: center;
+}
+.dataframe {
+  margin: 2em auto;
+  width: 95%;
+  overflow-x: auto;
+  display: block;
+  max-width: 100%;
+}
+div.output pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-x: auto;
+  max-width: 100%;
+}
+</style>
+
+
+    <button class="colab-df-generate" onclick="generateWithVariable('df_primeiros')"
+            title="Generate code using this dataframe."
+            style="display:none;">
+
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px"viewBox="0 0 24 24"
+       width="24px">
+    <path d="M7,19H8.4L18.45,9,17,7.55,7,17.6ZM5,21V16.75L18.45,3.32a2,2,0,0,1,2.83,0l1.4,1.43a1.91,1.91,0,0,1,.58,1.4,1.91,1.91,0,0,1-.58,1.4L9.25,21ZM18.45,9,17,7.55Zm-12,3A5.31,5.31,0,0,0,4.9,8.1,5.31,5.31,0,0,0,1,6.5,5.31,5.31,0,0,0,4.9,4.9,5.31,5.31,0,0,0,6.5,1,5.31,5.31,0,0,0,8.1,4.9,5.31,5.31,0,0,0,12,6.5,5.46,5.46,0,0,0,6.5,12Z"/>
+  </svg>
+    </button>
+    <script>
+      (() => {
+      const buttonEl =
+        document.querySelector('#id_491e1295-2e28-43d9-bf65-386aaa9e8f1a button.colab-df-generate');
+      buttonEl.style.display =
+        google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+      buttonEl.onclick = () => {
+        google.colab.notebook.generateWithVariable('df_primeiros');
+      }
+      })();
+    </script>
+  </div>
+
+    </div>
+  </div>
+
+</div>
+</div>
+<div class="cell markdown" id="mmLW5KgAIV0p">
+<p>⬇️ Ver os 10 últimos produtos</p>
+</div>
+<div class="cell code" data-execution_count="28"
+data-colab="{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;,&quot;height&quot;:363}"
+id="UF9K3kXWIyi4" data-outputId="665b14af-38b9-47de-9c5a-4c170b2248d2">
+<div class="sourceCode" id="cb18"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>df_ultimos <span class="op">=</span> pd.read_sql_query(<span class="st">&quot;SELECT * FROM Products ORDER BY OrderID DESC LIMIT 10&quot;</span>, con)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>df_ultimos</span></code></pre></div>
+<div class="output execute_result" data-execution_count="28">
+
+  <div id="df-e6da337e-2288-490e-ba28-fec5ec50d018" class="colab-df-container">
+    <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>OrderID</th>
+      <th>Item</th>
+      <th>Category</th>
+      <th>Stock</th>
+      <th>Type</th>
+      <th>Purchase_Price</th>
+      <th>Sale_Price</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>100</td>
+      <td>Cat Litter</td>
+      <td>Pet</td>
+      <td>20</td>
+      <td>4kg bag</td>
+      <td>3.32</td>
+      <td>5.26</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>99</td>
+      <td>Dog Food</td>
+      <td>Pet</td>
+      <td>30</td>
+      <td>1kg pack</td>
+      <td>2.27</td>
+      <td>3.50</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>98</td>
+      <td>Lighter/Match</td>
+      <td>Household Items</td>
+      <td>50</td>
+      <td>Unit</td>
+      <td>0.26</td>
+      <td>0.69</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>97</td>
+      <td>Batteries</td>
+      <td>Household Items</td>
+      <td>40</td>
+      <td>2-unit pack</td>
+      <td>1.04</td>
+      <td>2.09</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>96</td>
+      <td>Candles</td>
+      <td>Utensils/Disposables</td>
+      <td>25</td>
+      <td>3-unit pack</td>
+      <td>0.69</td>
+      <td>1.56</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>95</td>
+      <td>Disposable Cups</td>
+      <td>Utensils/Disposables</td>
+      <td>60</td>
+      <td>20-unit pack</td>
+      <td>1.04</td>
+      <td>2.09</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>94</td>
+      <td>Disposable Plates</td>
+      <td>Utensils/Disposables</td>
+      <td>50</td>
+      <td>10-unit pack</td>
+      <td>0.86</td>
+      <td>1.74</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>93</td>
+      <td>Plastic Wrap</td>
+      <td>Utensils/Disposables</td>
+      <td>35</td>
+      <td>15m roll</td>
+      <td>1.21</td>
+      <td>2.27</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>92</td>
+      <td>Aluminum Foil</td>
+      <td>Utensils/Disposables</td>
+      <td>30</td>
+      <td>15m roll</td>
+      <td>1.04</td>
+      <td>1.92</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>91</td>
+      <td>Trash Bags</td>
+      <td>Utensils/Disposables</td>
+      <td>45</td>
+      <td>30-unit roll</td>
+      <td>1.56</td>
+      <td>2.79</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+    <div class="colab-df-buttons">
+
+  <div class="colab-df-container">
+    <button class="colab-df-convert" onclick="convertToInteractive('df-e6da337e-2288-490e-ba28-fec5ec50d018')"
+            title="Convert this dataframe to an interactive table."
+            style="display:none;">
+
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960">
+    <path d="M120-120v-720h720v720H120Zm60-500h600v-160H180v160Zm220 220h160v-160H400v160Zm0 220h160v-160H400v160ZM180-400h160v-160H180v160Zm440 0h160v-160H620v160ZM180-180h160v-160H180v160Zm440 0h160v-160H620v160Z"/>
+  </svg>
+    </button>
+
+  
+
+<style>
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+  line-height: 1.6;
+  padding: 2em;
+  max-width: 1200px;
+  margin: auto;
+}
+h1, h2, h3 {
+  color: #2c3e50;
+}
+table {
+  margin: 2em auto;
+  border-collapse: collapse;
+  width: 95%;
+  max-width: 100%;
+  font-variant-numeric: lining-nums tabular-nums;
+  display: table;
+  overflow-x: auto;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+th {
+  background-color: #3498db;
+  color: white;
+  padding: 0.75em;
+  text-align: center;
+}
+td {
+  border: 1px solid #ddd;
+  padding: 0.6em;
+  text-align: center;
+}
+.dataframe {
+  margin: 2em auto;
+  width: 95%;
+  overflow-x: auto;
+  display: block;
+  max-width: 100%;
+}
+div.output pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-x: auto;
+  max-width: 100%;
+}
+</style>
+
+
+
+    <script>
+      const buttonEl =
+        document.querySelector('#df-e6da337e-2288-490e-ba28-fec5ec50d018 button.colab-df-convert');
+      buttonEl.style.display =
+        google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+      async function convertToInteractive(key) {
+        const element = document.querySelector('#df-e6da337e-2288-490e-ba28-fec5ec50d018');
+        const dataTable =
+          await google.colab.kernel.invokeFunction('convertToInteractive',
+                                                    [key], {});
+        if (!dataTable) return;
+
+        const docLinkHtml = 'Like what you see? Visit the ' +
+          '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
+          + ' to learn more about interactive tables.';
+        element.innerHTML = '';
+        dataTable['output_type'] = 'display_data';
+        await google.colab.output.renderOutput(dataTable, element);
+        const docLink = document.createElement('div');
+        docLink.innerHTML = docLinkHtml;
+        element.appendChild(docLink);
+      }
+    </script>
+  </div>
+
+
+    <div id="df-8d69e1f8-9515-40b1-ae8a-9d47c3f26231">
+      <button class="colab-df-quickchart" onclick="quickchart('df-8d69e1f8-9515-40b1-ae8a-9d47c3f26231')"
+                title="Suggest charts"
+                style="display:none;">
+
+<svg xmlns="http://www.w3.org/2000/svg" height="24px"viewBox="0 0 24 24"
+     width="24px">
+    <g>
+        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+    </g>
+</svg>
+      </button>
+
+
+
+<style>
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+  line-height: 1.6;
+  padding: 2em;
+  max-width: 1200px;
+  margin: auto;
+}
+h1, h2, h3 {
+  color: #2c3e50;
+}
+table {
+  margin: 2em auto;
+  border-collapse: collapse;
+  width: 95%;
+  max-width: 100%;
+  font-variant-numeric: lining-nums tabular-nums;
+  display: table;
+  overflow-x: auto;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+th {
+  background-color: #3498db;
+  color: white;
+  padding: 0.75em;
+  text-align: center;
+}
+td {
+  border: 1px solid #ddd;
+  padding: 0.6em;
+  text-align: center;
+}
+.dataframe {
+  margin: 2em auto;
+  width: 95%;
+  overflow-x: auto;
+  display: block;
+  max-width: 100%;
+}
+div.output pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-x: auto;
+  max-width: 100%;
+}
+</style>
+
+
+
+      <script>
+        async function quickchart(key) {
+          const quickchartButtonEl =
+            document.querySelector('#' + key + ' button');
+          quickchartButtonEl.disabled = true;  // To prevent multiple clicks.
+          quickchartButtonEl.classList.add('colab-df-spinner');
+          try {
+            const charts = await google.colab.kernel.invokeFunction(
+                'suggestCharts', [key], {});
+          } catch (error) {
+            console.error('Error during call to suggestCharts:', error);
+          }
+          quickchartButtonEl.classList.remove('colab-df-spinner');
+          quickchartButtonEl.classList.add('colab-df-quickchart-complete');
+        }
+        (() => {
+          let quickchartButtonEl =
+            document.querySelector('#df-8d69e1f8-9515-40b1-ae8a-9d47c3f26231 button');
+          quickchartButtonEl.style.display =
+            google.colab.kernel.accessAllowed ? 'block' : 'none';
+        })();
+      </script>
+    </div>
+
+  <div id="id_aaab7f3f-1d72-4780-8c82-e45113293b90">
+    
+
+<style>
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+  line-height: 1.6;
+  padding: 2em;
+  max-width: 1200px;
+  margin: auto;
+}
+h1, h2, h3 {
+  color: #2c3e50;
+}
+table {
+  margin: 2em auto;
+  border-collapse: collapse;
+  width: 95%;
+  max-width: 100%;
+  font-variant-numeric: lining-nums tabular-nums;
+  display: table;
+  overflow-x: auto;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+th {
+  background-color: #3498db;
+  color: white;
+  padding: 0.75em;
+  text-align: center;
+}
+td {
+  border: 1px solid #ddd;
+  padding: 0.6em;
+  text-align: center;
+}
+.dataframe {
+  margin: 2em auto;
+  width: 95%;
+  overflow-x: auto;
+  display: block;
+  max-width: 100%;
+}
+div.output pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-x: auto;
+  max-width: 100%;
+}
+</style>
+
+
+    <button class="colab-df-generate" onclick="generateWithVariable('df_ultimos')"
+            title="Generate code using this dataframe."
+            style="display:none;">
+
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px"viewBox="0 0 24 24"
+       width="24px">
+    <path d="M7,19H8.4L18.45,9,17,7.55,7,17.6ZM5,21V16.75L18.45,3.32a2,2,0,0,1,2.83,0l1.4,1.43a1.91,1.91,0,0,1,.58,1.4,1.91,1.91,0,0,1-.58,1.4L9.25,21ZM18.45,9,17,7.55Zm-12,3A5.31,5.31,0,0,0,4.9,8.1,5.31,5.31,0,0,0,1,6.5,5.31,5.31,0,0,0,4.9,4.9,5.31,5.31,0,0,0,6.5,1,5.31,5.31,0,0,0,8.1,4.9,5.31,5.31,0,0,0,12,6.5,5.46,5.46,0,0,0,6.5,12Z"/>
+  </svg>
+    </button>
+    <script>
+      (() => {
+      const buttonEl =
+        document.querySelector('#id_aaab7f3f-1d72-4780-8c82-e45113293b90 button.colab-df-generate');
+      buttonEl.style.display =
+        google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+      buttonEl.onclick = () => {
+        google.colab.notebook.generateWithVariable('df_ultimos');
+      }
+      })();
+    </script>
+  </div>
+
+    </div>
+  </div>
+
+</div>
+</div>
+<div class="cell markdown" id="cLGd6C72IVl3">
+<p>🎲 Ver 10 produtos aleatórios</p>
+</div>
+<div class="cell code" data-execution_count="29"
+data-colab="{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;,&quot;height&quot;:363}"
+id="_eM9NLnDI3EQ" data-outputId="fc46bdb8-7d17-4e5f-d8f6-5d9c24c9c6d3">
+<div class="sourceCode" id="cb19"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>df_aleatorios <span class="op">=</span> pd.read_sql_query(<span class="st">&quot;SELECT * FROM Products ORDER BY RANDOM() LIMIT 10&quot;</span>, con)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>df_aleatorios</span></code></pre></div>
+<div class="output execute_result" data-execution_count="29">
+
+  <div id="df-18adc9c4-1fd0-4ed0-93ec-22253d05355a" class="colab-df-container">
+    <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>OrderID</th>
+      <th>Item</th>
+      <th>Category</th>
+      <th>Stock</th>
+      <th>Type</th>
+      <th>Purchase_Price</th>
+      <th>Sale_Price</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>4</td>
+      <td>Soybean Oil</td>
+      <td>Basic Foods</td>
+      <td>80</td>
+      <td>900ml bottle</td>
+      <td>1.20</td>
+      <td>1.74</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>7</td>
+      <td>Wheat Flour</td>
+      <td>Basic Foods</td>
+      <td>75</td>
+      <td>1kg pack</td>
+      <td>0.74</td>
+      <td>1.20</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>50</td>
+      <td>Laundry Detergent</td>
+      <td>Cleaning</td>
+      <td>50</td>
+      <td>1kg pack</td>
+      <td>2.27</td>
+      <td>3.50</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>35</td>
+      <td>Beetroot</td>
+      <td>Produce</td>
+      <td>30</td>
+      <td>Kg</td>
+      <td>0.56</td>
+      <td>1.09</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>43</td>
+      <td>Orange Juice</td>
+      <td>Beverages</td>
+      <td>40</td>
+      <td>1L carton</td>
+      <td>1.04</td>
+      <td>1.92</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>67</td>
+      <td>Dental Floss</td>
+      <td>Personal Care</td>
+      <td>25</td>
+      <td>Unit</td>
+      <td>0.69</td>
+      <td>1.39</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>84</td>
+      <td>Ketchup</td>
+      <td>Ready Foods</td>
+      <td>40</td>
+      <td>380g bottle</td>
+      <td>0.86</td>
+      <td>1.74</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>41</td>
+      <td>Papaya</td>
+      <td>Produce</td>
+      <td>25</td>
+      <td>Unit</td>
+      <td>1.04</td>
+      <td>2.27</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>25</td>
+      <td>Pork Chop</td>
+      <td>Meats</td>
+      <td>15</td>
+      <td>1kg tray</td>
+      <td>4.02</td>
+      <td>5.78</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>96</td>
+      <td>Candles</td>
+      <td>Utensils/Disposables</td>
+      <td>25</td>
+      <td>3-unit pack</td>
+      <td>0.69</td>
+      <td>1.56</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+    <div class="colab-df-buttons">
+
+  <div class="colab-df-container">
+    <button class="colab-df-convert" onclick="convertToInteractive('df-18adc9c4-1fd0-4ed0-93ec-22253d05355a')"
+            title="Convert this dataframe to an interactive table."
+            style="display:none;">
+
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960">
+    <path d="M120-120v-720h720v720H120Zm60-500h600v-160H180v160Zm220 220h160v-160H400v160Zm0 220h160v-160H400v160ZM180-400h160v-160H180v160Zm440 0h160v-160H620v160ZM180-180h160v-160H180v160Zm440 0h160v-160H620v160Z"/>
+  </svg>
+    </button>
+
+  
+
+<style>
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+  line-height: 1.6;
+  padding: 2em;
+  max-width: 1200px;
+  margin: auto;
+}
+h1, h2, h3 {
+  color: #2c3e50;
+}
+table {
+  margin: 2em auto;
+  border-collapse: collapse;
+  width: 95%;
+  max-width: 100%;
+  font-variant-numeric: lining-nums tabular-nums;
+  display: table;
+  overflow-x: auto;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+th {
+  background-color: #3498db;
+  color: white;
+  padding: 0.75em;
+  text-align: center;
+}
+td {
+  border: 1px solid #ddd;
+  padding: 0.6em;
+  text-align: center;
+}
+.dataframe {
+  margin: 2em auto;
+  width: 95%;
+  overflow-x: auto;
+  display: block;
+  max-width: 100%;
+}
+div.output pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-x: auto;
+  max-width: 100%;
+}
+</style>
+
+
+
+    <script>
+      const buttonEl =
+        document.querySelector('#df-18adc9c4-1fd0-4ed0-93ec-22253d05355a button.colab-df-convert');
+      buttonEl.style.display =
+        google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+      async function convertToInteractive(key) {
+        const element = document.querySelector('#df-18adc9c4-1fd0-4ed0-93ec-22253d05355a');
+        const dataTable =
+          await google.colab.kernel.invokeFunction('convertToInteractive',
+                                                    [key], {});
+        if (!dataTable) return;
+
+        const docLinkHtml = 'Like what you see? Visit the ' +
+          '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
+          + ' to learn more about interactive tables.';
+        element.innerHTML = '';
+        dataTable['output_type'] = 'display_data';
+        await google.colab.output.renderOutput(dataTable, element);
+        const docLink = document.createElement('div');
+        docLink.innerHTML = docLinkHtml;
+        element.appendChild(docLink);
+      }
+    </script>
+  </div>
+
+
+    <div id="df-32af8944-2b06-4fa4-9156-c67aeaf378c7">
+      <button class="colab-df-quickchart" onclick="quickchart('df-32af8944-2b06-4fa4-9156-c67aeaf378c7')"
+                title="Suggest charts"
+                style="display:none;">
+
+<svg xmlns="http://www.w3.org/2000/svg" height="24px"viewBox="0 0 24 24"
+     width="24px">
+    <g>
+        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+    </g>
+</svg>
+      </button>
+
+
+
+<style>
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+  line-height: 1.6;
+  padding: 2em;
+  max-width: 1200px;
+  margin: auto;
+}
+h1, h2, h3 {
+  color: #2c3e50;
+}
+table {
+  margin: 2em auto;
+  border-collapse: collapse;
+  width: 95%;
+  max-width: 100%;
+  font-variant-numeric: lining-nums tabular-nums;
+  display: table;
+  overflow-x: auto;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+th {
+  background-color: #3498db;
+  color: white;
+  padding: 0.75em;
+  text-align: center;
+}
+td {
+  border: 1px solid #ddd;
+  padding: 0.6em;
+  text-align: center;
+}
+.dataframe {
+  margin: 2em auto;
+  width: 95%;
+  overflow-x: auto;
+  display: block;
+  max-width: 100%;
+}
+div.output pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-x: auto;
+  max-width: 100%;
+}
+</style>
+
+
+
+      <script>
+        async function quickchart(key) {
+          const quickchartButtonEl =
+            document.querySelector('#' + key + ' button');
+          quickchartButtonEl.disabled = true;  // To prevent multiple clicks.
+          quickchartButtonEl.classList.add('colab-df-spinner');
+          try {
+            const charts = await google.colab.kernel.invokeFunction(
+                'suggestCharts', [key], {});
+          } catch (error) {
+            console.error('Error during call to suggestCharts:', error);
+          }
+          quickchartButtonEl.classList.remove('colab-df-spinner');
+          quickchartButtonEl.classList.add('colab-df-quickchart-complete');
+        }
+        (() => {
+          let quickchartButtonEl =
+            document.querySelector('#df-32af8944-2b06-4fa4-9156-c67aeaf378c7 button');
+          quickchartButtonEl.style.display =
+            google.colab.kernel.accessAllowed ? 'block' : 'none';
+        })();
+      </script>
+    </div>
+
+  <div id="id_f1d03e51-7d7a-457e-b17e-42cdd942abda">
+    
+
+<style>
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+  line-height: 1.6;
+  padding: 2em;
+  max-width: 1200px;
+  margin: auto;
+}
+h1, h2, h3 {
+  color: #2c3e50;
+}
+table {
+  margin: 2em auto;
+  border-collapse: collapse;
+  width: 95%;
+  max-width: 100%;
+  font-variant-numeric: lining-nums tabular-nums;
+  display: table;
+  overflow-x: auto;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+th {
+  background-color: #3498db;
+  color: white;
+  padding: 0.75em;
+  text-align: center;
+}
+td {
+  border: 1px solid #ddd;
+  padding: 0.6em;
+  text-align: center;
+}
+.dataframe {
+  margin: 2em auto;
+  width: 95%;
+  overflow-x: auto;
+  display: block;
+  max-width: 100%;
+}
+div.output pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-x: auto;
+  max-width: 100%;
+}
+</style>
+
+
+    <button class="colab-df-generate" onclick="generateWithVariable('df_aleatorios')"
+            title="Generate code using this dataframe."
+            style="display:none;">
+
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px"viewBox="0 0 24 24"
+       width="24px">
+    <path d="M7,19H8.4L18.45,9,17,7.55,7,17.6ZM5,21V16.75L18.45,3.32a2,2,0,0,1,2.83,0l1.4,1.43a1.91,1.91,0,0,1,.58,1.4,1.91,1.91,0,0,1-.58,1.4L9.25,21ZM18.45,9,17,7.55Zm-12,3A5.31,5.31,0,0,0,4.9,8.1,5.31,5.31,0,0,0,1,6.5,5.31,5.31,0,0,0,4.9,4.9,5.31,5.31,0,0,0,6.5,1,5.31,5.31,0,0,0,8.1,4.9,5.31,5.31,0,0,0,12,6.5,5.46,5.46,0,0,0,6.5,12Z"/>
+  </svg>
+    </button>
+    <script>
+      (() => {
+      const buttonEl =
+        document.querySelector('#id_f1d03e51-7d7a-457e-b17e-42cdd942abda button.colab-df-generate');
+      buttonEl.style.display =
+        google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+      buttonEl.onclick = () => {
+        google.colab.notebook.generateWithVariable('df_aleatorios');
+      }
+      })();
+    </script>
+  </div>
+
+    </div>
+  </div>
+
+</div>
+</div>
+<div class="cell markdown" id="h7PazH_eECj2">
+<p>📉 Ver os produtos com estoque abaixo de 20 unidades</p>
+</div>
+<div class="cell code" data-execution_count="31"
+data-colab="{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;,&quot;height&quot;:269}"
+id="fTiLyNRtGtGZ" data-outputId="9806c58c-80ca-4ea2-b92e-b9ce3761a13d">
+<div class="sourceCode" id="cb20"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_sql_query(<span class="st">&quot;SELECT * FROM Products WHERE Stock &lt; 20&quot;</span>, con)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>df</span></code></pre></div>
+<div class="output execute_result" data-execution_count="31">
+
+  <div id="df-24a631b6-cda5-4bef-92cb-0f72b2fb5241" class="colab-df-container">
+    <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>OrderID</th>
+      <th>Item</th>
+      <th>Category</th>
+      <th>Stock</th>
+      <th>Type</th>
+      <th>Purchase_Price</th>
+      <th>Sale_Price</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>19</td>
+      <td>Cake</td>
+      <td>Bakery</td>
+      <td>15</td>
+      <td>Slice</td>
+      <td>0.32</td>
+      <td>0.79</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>25</td>
+      <td>Pork Chop</td>
+      <td>Meats</td>
+      <td>15</td>
+      <td>1kg tray</td>
+      <td>4.02</td>
+      <td>5.78</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>27</td>
+      <td>Calabrese Sausage</td>
+      <td>Deli</td>
+      <td>18</td>
+      <td>500g pack</td>
+      <td>2.20</td>
+      <td>3.50</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>28</td>
+      <td>Frozen Fish</td>
+      <td>Meats</td>
+      <td>12</td>
+      <td>1kg pack</td>
+      <td>4.38</td>
+      <td>6.49</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>56</td>
+      <td>Broom</td>
+      <td>Cleaning</td>
+      <td>15</td>
+      <td>Unit</td>
+      <td>3.32</td>
+      <td>5.26</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>57</td>
+      <td>Squeegee</td>
+      <td>Cleaning</td>
+      <td>12</td>
+      <td>Unit</td>
+      <td>2.79</td>
+      <td>4.38</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>89</td>
+      <td>Pancake Mix</td>
+      <td>Ready Foods</td>
+      <td>15</td>
+      <td>200g pack</td>
+      <td>0.69</td>
+      <td>1.39</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+    <div class="colab-df-buttons">
+
+  <div class="colab-df-container">
+    <button class="colab-df-convert" onclick="convertToInteractive('df-24a631b6-cda5-4bef-92cb-0f72b2fb5241')"
+            title="Convert this dataframe to an interactive table."
+            style="display:none;">
+
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960">
+    <path d="M120-120v-720h720v720H120Zm60-500h600v-160H180v160Zm220 220h160v-160H400v160Zm0 220h160v-160H400v160ZM180-400h160v-160H180v160Zm440 0h160v-160H620v160ZM180-180h160v-160H180v160Zm440 0h160v-160H620v160Z"/>
+  </svg>
+    </button>
+
+  
+
+<style>
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+  line-height: 1.6;
+  padding: 2em;
+  max-width: 1200px;
+  margin: auto;
+}
+h1, h2, h3 {
+  color: #2c3e50;
+}
+table {
+  margin: 2em auto;
+  border-collapse: collapse;
+  width: 95%;
+  max-width: 100%;
+  font-variant-numeric: lining-nums tabular-nums;
+  display: table;
+  overflow-x: auto;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+th {
+  background-color: #3498db;
+  color: white;
+  padding: 0.75em;
+  text-align: center;
+}
+td {
+  border: 1px solid #ddd;
+  padding: 0.6em;
+  text-align: center;
+}
+.dataframe {
+  margin: 2em auto;
+  width: 95%;
+  overflow-x: auto;
+  display: block;
+  max-width: 100%;
+}
+div.output pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-x: auto;
+  max-width: 100%;
+}
+</style>
+
+
+
+    <script>
+      const buttonEl =
+        document.querySelector('#df-24a631b6-cda5-4bef-92cb-0f72b2fb5241 button.colab-df-convert');
+      buttonEl.style.display =
+        google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+      async function convertToInteractive(key) {
+        const element = document.querySelector('#df-24a631b6-cda5-4bef-92cb-0f72b2fb5241');
+        const dataTable =
+          await google.colab.kernel.invokeFunction('convertToInteractive',
+                                                    [key], {});
+        if (!dataTable) return;
+
+        const docLinkHtml = 'Like what you see? Visit the ' +
+          '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
+          + ' to learn more about interactive tables.';
+        element.innerHTML = '';
+        dataTable['output_type'] = 'display_data';
+        await google.colab.output.renderOutput(dataTable, element);
+        const docLink = document.createElement('div');
+        docLink.innerHTML = docLinkHtml;
+        element.appendChild(docLink);
+      }
+    </script>
+  </div>
+
+
+    <div id="df-aef3fa8a-bb3d-43c4-97f2-b6898c5477fc">
+      <button class="colab-df-quickchart" onclick="quickchart('df-aef3fa8a-bb3d-43c4-97f2-b6898c5477fc')"
+                title="Suggest charts"
+                style="display:none;">
+
+<svg xmlns="http://www.w3.org/2000/svg" height="24px"viewBox="0 0 24 24"
+     width="24px">
+    <g>
+        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+    </g>
+</svg>
+      </button>
+
+
+
+<style>
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+  line-height: 1.6;
+  padding: 2em;
+  max-width: 1200px;
+  margin: auto;
+}
+h1, h2, h3 {
+  color: #2c3e50;
+}
+table {
+  margin: 2em auto;
+  border-collapse: collapse;
+  width: 95%;
+  max-width: 100%;
+  font-variant-numeric: lining-nums tabular-nums;
+  display: table;
+  overflow-x: auto;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+th {
+  background-color: #3498db;
+  color: white;
+  padding: 0.75em;
+  text-align: center;
+}
+td {
+  border: 1px solid #ddd;
+  padding: 0.6em;
+  text-align: center;
+}
+.dataframe {
+  margin: 2em auto;
+  width: 95%;
+  overflow-x: auto;
+  display: block;
+  max-width: 100%;
+}
+div.output pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-x: auto;
+  max-width: 100%;
+}
+</style>
+
+
+
+      <script>
+        async function quickchart(key) {
+          const quickchartButtonEl =
+            document.querySelector('#' + key + ' button');
+          quickchartButtonEl.disabled = true;  // To prevent multiple clicks.
+          quickchartButtonEl.classList.add('colab-df-spinner');
+          try {
+            const charts = await google.colab.kernel.invokeFunction(
+                'suggestCharts', [key], {});
+          } catch (error) {
+            console.error('Error during call to suggestCharts:', error);
+          }
+          quickchartButtonEl.classList.remove('colab-df-spinner');
+          quickchartButtonEl.classList.add('colab-df-quickchart-complete');
+        }
+        (() => {
+          let quickchartButtonEl =
+            document.querySelector('#df-aef3fa8a-bb3d-43c4-97f2-b6898c5477fc button');
+          quickchartButtonEl.style.display =
+            google.colab.kernel.accessAllowed ? 'block' : 'none';
+        })();
+      </script>
+    </div>
+
+  <div id="id_60cc057e-49f5-457b-8b48-d5228b2d299b">
+    
+
+<style>
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+  line-height: 1.6;
+  padding: 2em;
+  max-width: 1200px;
+  margin: auto;
+}
+h1, h2, h3 {
+  color: #2c3e50;
+}
+table {
+  margin: 2em auto;
+  border-collapse: collapse;
+  width: 95%;
+  max-width: 100%;
+  font-variant-numeric: lining-nums tabular-nums;
+  display: table;
+  overflow-x: auto;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+th {
+  background-color: #3498db;
+  color: white;
+  padding: 0.75em;
+  text-align: center;
+}
+td {
+  border: 1px solid #ddd;
+  padding: 0.6em;
+  text-align: center;
+}
+.dataframe {
+  margin: 2em auto;
+  width: 95%;
+  overflow-x: auto;
+  display: block;
+  max-width: 100%;
+}
+div.output pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-x: auto;
+  max-width: 100%;
+}
+</style>
+
+
+    <button class="colab-df-generate" onclick="generateWithVariable('df')"
+            title="Generate code using this dataframe."
+            style="display:none;">
+
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px"viewBox="0 0 24 24"
+       width="24px">
+    <path d="M7,19H8.4L18.45,9,17,7.55,7,17.6ZM5,21V16.75L18.45,3.32a2,2,0,0,1,2.83,0l1.4,1.43a1.91,1.91,0,0,1,.58,1.4,1.91,1.91,0,0,1-.58,1.4L9.25,21ZM18.45,9,17,7.55Zm-12,3A5.31,5.31,0,0,0,4.9,8.1,5.31,5.31,0,0,0,1,6.5,5.31,5.31,0,0,0,4.9,4.9,5.31,5.31,0,0,0,6.5,1,5.31,5.31,0,0,0,8.1,4.9,5.31,5.31,0,0,0,12,6.5,5.46,5.46,0,0,0,6.5,12Z"/>
+  </svg>
+    </button>
+    <script>
+      (() => {
+      const buttonEl =
+        document.querySelector('#id_60cc057e-49f5-457b-8b48-d5228b2d299b button.colab-df-generate');
+      buttonEl.style.display =
+        google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+      buttonEl.onclick = () => {
+        google.colab.notebook.generateWithVariable('df');
+      }
+      })();
+    </script>
+  </div>
+
+    </div>
+  </div>
+
+</div>
+</div>
+<div class="cell markdown" id="y3S1NrYxEPMv">
+<p>📊 Obter a média de preço de venda por categoria</p>
+</div>
+<div class="cell code" data-execution_count="33"
+data-colab="{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;,&quot;height&quot;:551}"
+id="OGW2Pyx7G-BX" data-outputId="c2e1bd7d-d63b-4556-f57a-7446fb79211d">
+<div class="sourceCode" id="cb21"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_sql_query(<span class="st">&quot;&quot;&quot;</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="st">    SELECT Category, AVG(Sale_Price) AS Avarage_Price</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="st">    FROM Products</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="st">    GROUP BY Category</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;&quot;&quot;</span>, con)</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>df</span></code></pre></div>
+<div class="output execute_result" data-execution_count="33">
+
+  <div id="df-19e20143-932c-40e6-9879-56ad40f5d0af" class="colab-df-container">
+    <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Category</th>
+      <th>Avarage_Price</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Bakery</td>
+      <td>1.162500</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Basic Foods</td>
+      <td>1.638750</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Beverages</td>
+      <td>1.932857</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Cleaning</td>
+      <td>2.597778</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Dairy</td>
+      <td>1.403750</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Deli</td>
+      <td>1.900000</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Household Items</td>
+      <td>1.390000</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Meats</td>
+      <td>5.255000</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>Meats/Deli</td>
+      <td>2.620000</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>Personal Care</td>
+      <td>2.250000</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>Pet</td>
+      <td>4.380000</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>Produce</td>
+      <td>1.372857</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>Ready Foods</td>
+      <td>1.395833</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>Snacks</td>
+      <td>1.136000</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>Snacks/Desserts</td>
+      <td>2.095000</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>Utensils/Disposables</td>
+      <td>1.965714</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+    <div class="colab-df-buttons">
+
+  <div class="colab-df-container">
+    <button class="colab-df-convert" onclick="convertToInteractive('df-19e20143-932c-40e6-9879-56ad40f5d0af')"
+            title="Convert this dataframe to an interactive table."
+            style="display:none;">
+
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960">
+    <path d="M120-120v-720h720v720H120Zm60-500h600v-160H180v160Zm220 220h160v-160H400v160Zm0 220h160v-160H400v160ZM180-400h160v-160H180v160Zm440 0h160v-160H620v160ZM180-180h160v-160H180v160Zm440 0h160v-160H620v160Z"/>
+  </svg>
+    </button>
+
+  
+
+<style>
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+  line-height: 1.6;
+  padding: 2em;
+  max-width: 1200px;
+  margin: auto;
+}
+h1, h2, h3 {
+  color: #2c3e50;
+}
+table {
+  margin: 2em auto;
+  border-collapse: collapse;
+  width: 95%;
+  max-width: 100%;
+  font-variant-numeric: lining-nums tabular-nums;
+  display: table;
+  overflow-x: auto;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+th {
+  background-color: #3498db;
+  color: white;
+  padding: 0.75em;
+  text-align: center;
+}
+td {
+  border: 1px solid #ddd;
+  padding: 0.6em;
+  text-align: center;
+}
+.dataframe {
+  margin: 2em auto;
+  width: 95%;
+  overflow-x: auto;
+  display: block;
+  max-width: 100%;
+}
+div.output pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-x: auto;
+  max-width: 100%;
+}
+</style>
+
+
+
+    <script>
+      const buttonEl =
+        document.querySelector('#df-19e20143-932c-40e6-9879-56ad40f5d0af button.colab-df-convert');
+      buttonEl.style.display =
+        google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+      async function convertToInteractive(key) {
+        const element = document.querySelector('#df-19e20143-932c-40e6-9879-56ad40f5d0af');
+        const dataTable =
+          await google.colab.kernel.invokeFunction('convertToInteractive',
+                                                    [key], {});
+        if (!dataTable) return;
+
+        const docLinkHtml = 'Like what you see? Visit the ' +
+          '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
+          + ' to learn more about interactive tables.';
+        element.innerHTML = '';
+        dataTable['output_type'] = 'display_data';
+        await google.colab.output.renderOutput(dataTable, element);
+        const docLink = document.createElement('div');
+        docLink.innerHTML = docLinkHtml;
+        element.appendChild(docLink);
+      }
+    </script>
+  </div>
+
+
+    <div id="df-f30919bc-9f8c-4dac-8a02-fa7a88d85d0c">
+      <button class="colab-df-quickchart" onclick="quickchart('df-f30919bc-9f8c-4dac-8a02-fa7a88d85d0c')"
+                title="Suggest charts"
+                style="display:none;">
+
+<svg xmlns="http://www.w3.org/2000/svg" height="24px"viewBox="0 0 24 24"
+     width="24px">
+    <g>
+        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+    </g>
+</svg>
+      </button>
+
+
+
+<style>
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+  line-height: 1.6;
+  padding: 2em;
+  max-width: 1200px;
+  margin: auto;
+}
+h1, h2, h3 {
+  color: #2c3e50;
+}
+table {
+  margin: 2em auto;
+  border-collapse: collapse;
+  width: 95%;
+  max-width: 100%;
+  font-variant-numeric: lining-nums tabular-nums;
+  display: table;
+  overflow-x: auto;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+th {
+  background-color: #3498db;
+  color: white;
+  padding: 0.75em;
+  text-align: center;
+}
+td {
+  border: 1px solid #ddd;
+  padding: 0.6em;
+  text-align: center;
+}
+.dataframe {
+  margin: 2em auto;
+  width: 95%;
+  overflow-x: auto;
+  display: block;
+  max-width: 100%;
+}
+div.output pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-x: auto;
+  max-width: 100%;
+}
+</style>
+
+
+
+      <script>
+        async function quickchart(key) {
+          const quickchartButtonEl =
+            document.querySelector('#' + key + ' button');
+          quickchartButtonEl.disabled = true;  // To prevent multiple clicks.
+          quickchartButtonEl.classList.add('colab-df-spinner');
+          try {
+            const charts = await google.colab.kernel.invokeFunction(
+                'suggestCharts', [key], {});
+          } catch (error) {
+            console.error('Error during call to suggestCharts:', error);
+          }
+          quickchartButtonEl.classList.remove('colab-df-spinner');
+          quickchartButtonEl.classList.add('colab-df-quickchart-complete');
+        }
+        (() => {
+          let quickchartButtonEl =
+            document.querySelector('#df-f30919bc-9f8c-4dac-8a02-fa7a88d85d0c button');
+          quickchartButtonEl.style.display =
+            google.colab.kernel.accessAllowed ? 'block' : 'none';
+        })();
+      </script>
+    </div>
+
+  <div id="id_2e18b72f-9ecb-4e2a-81d2-f7e936fddca1">
+    
+
+<style>
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+  line-height: 1.6;
+  padding: 2em;
+  max-width: 1200px;
+  margin: auto;
+}
+h1, h2, h3 {
+  color: #2c3e50;
+}
+table {
+  margin: 2em auto;
+  border-collapse: collapse;
+  width: 95%;
+  max-width: 100%;
+  font-variant-numeric: lining-nums tabular-nums;
+  display: table;
+  overflow-x: auto;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+th {
+  background-color: #3498db;
+  color: white;
+  padding: 0.75em;
+  text-align: center;
+}
+td {
+  border: 1px solid #ddd;
+  padding: 0.6em;
+  text-align: center;
+}
+.dataframe {
+  margin: 2em auto;
+  width: 95%;
+  overflow-x: auto;
+  display: block;
+  max-width: 100%;
+}
+div.output pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-x: auto;
+  max-width: 100%;
+}
+</style>
+
+
+    <button class="colab-df-generate" onclick="generateWithVariable('df')"
+            title="Generate code using this dataframe."
+            style="display:none;">
+
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px"viewBox="0 0 24 24"
+       width="24px">
+    <path d="M7,19H8.4L18.45,9,17,7.55,7,17.6ZM5,21V16.75L18.45,3.32a2,2,0,0,1,2.83,0l1.4,1.43a1.91,1.91,0,0,1,.58,1.4,1.91,1.91,0,0,1-.58,1.4L9.25,21ZM18.45,9,17,7.55Zm-12,3A5.31,5.31,0,0,0,4.9,8.1,5.31,5.31,0,0,0,1,6.5,5.31,5.31,0,0,0,4.9,4.9,5.31,5.31,0,0,0,6.5,1,5.31,5.31,0,0,0,8.1,4.9,5.31,5.31,0,0,0,12,6.5,5.46,5.46,0,0,0,6.5,12Z"/>
+  </svg>
+    </button>
+    <script>
+      (() => {
+      const buttonEl =
+        document.querySelector('#id_2e18b72f-9ecb-4e2a-81d2-f7e936fddca1 button.colab-df-generate');
+      buttonEl.style.display =
+        google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+      buttonEl.onclick = () => {
+        google.colab.notebook.generateWithVariable('df');
+      }
+      })();
+    </script>
+  </div>
+
+    </div>
+  </div>
+
+</div>
+</div>
+<div class="cell markdown" id="ufOzql0iEY7H">
+<p>💰 Ver produtos ordenados do mais caro para o mais barato (preço de
+venda)</p>
+</div>
+<div class="cell code" data-execution_count="34"
+data-colab="{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;,&quot;height&quot;:363}"
+id="co6y9OLZHG5W" data-outputId="13f5c623-3be4-498c-ff81-9ffc35427fb1">
+<div class="sourceCode" id="cb22"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_sql_query(<span class="st">&quot;&quot;&quot;</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="st">    SELECT * FROM Products</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="st">    ORDER BY Sale_Price DESC</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;&quot;&quot;</span>, con)</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>df.head(<span class="dv">10</span>)</span></code></pre></div>
+<div class="output execute_result" data-execution_count="34">
+
+  <div id="df-b2f8fc66-c9e9-49a1-8469-6ca636288b2b" class="colab-df-container">
+    <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>OrderID</th>
+      <th>Item</th>
+      <th>Category</th>
+      <th>Stock</th>
+      <th>Type</th>
+      <th>Purchase_Price</th>
+      <th>Sale_Price</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>28</td>
+      <td>Frozen Fish</td>
+      <td>Meats</td>
+      <td>12</td>
+      <td>1kg pack</td>
+      <td>4.38</td>
+      <td>6.49</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>25</td>
+      <td>Pork Chop</td>
+      <td>Meats</td>
+      <td>15</td>
+      <td>1kg tray</td>
+      <td>4.02</td>
+      <td>5.78</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>56</td>
+      <td>Broom</td>
+      <td>Cleaning</td>
+      <td>15</td>
+      <td>Unit</td>
+      <td>3.32</td>
+      <td>5.26</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>77</td>
+      <td>Ice Cream</td>
+      <td>Snacks/Desserts</td>
+      <td>25</td>
+      <td>1.5L tub</td>
+      <td>3.32</td>
+      <td>5.26</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>100</td>
+      <td>Cat Litter</td>
+      <td>Pet</td>
+      <td>20</td>
+      <td>4kg bag</td>
+      <td>3.32</td>
+      <td>5.26</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>24</td>
+      <td>Ground Beef</td>
+      <td>Meats</td>
+      <td>20</td>
+      <td>500g tray</td>
+      <td>3.25</td>
+      <td>4.73</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>1</td>
+      <td>Rice</td>
+      <td>Basic Foods</td>
+      <td>120</td>
+      <td>5kg pack</td>
+      <td>3.32</td>
+      <td>4.38</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>57</td>
+      <td>Squeegee</td>
+      <td>Cleaning</td>
+      <td>12</td>
+      <td>Unit</td>
+      <td>2.79</td>
+      <td>4.38</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>23</td>
+      <td>Chicken Breast</td>
+      <td>Meats</td>
+      <td>35</td>
+      <td>1kg tray</td>
+      <td>2.79</td>
+      <td>4.02</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>27</td>
+      <td>Calabrese Sausage</td>
+      <td>Deli</td>
+      <td>18</td>
+      <td>500g pack</td>
+      <td>2.20</td>
+      <td>3.50</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+    <div class="colab-df-buttons">
+
+  <div class="colab-df-container">
+    <button class="colab-df-convert" onclick="convertToInteractive('df-b2f8fc66-c9e9-49a1-8469-6ca636288b2b')"
+            title="Convert this dataframe to an interactive table."
+            style="display:none;">
+
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960">
+    <path d="M120-120v-720h720v720H120Zm60-500h600v-160H180v160Zm220 220h160v-160H400v160Zm0 220h160v-160H400v160ZM180-400h160v-160H180v160Zm440 0h160v-160H620v160ZM180-180h160v-160H180v160Zm440 0h160v-160H620v160Z"/>
+  </svg>
+    </button>
+
+  
+
+<style>
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+  line-height: 1.6;
+  padding: 2em;
+  max-width: 1200px;
+  margin: auto;
+}
+h1, h2, h3 {
+  color: #2c3e50;
+}
+table {
+  margin: 2em auto;
+  border-collapse: collapse;
+  width: 95%;
+  max-width: 100%;
+  font-variant-numeric: lining-nums tabular-nums;
+  display: table;
+  overflow-x: auto;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+th {
+  background-color: #3498db;
+  color: white;
+  padding: 0.75em;
+  text-align: center;
+}
+td {
+  border: 1px solid #ddd;
+  padding: 0.6em;
+  text-align: center;
+}
+.dataframe {
+  margin: 2em auto;
+  width: 95%;
+  overflow-x: auto;
+  display: block;
+  max-width: 100%;
+}
+div.output pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-x: auto;
+  max-width: 100%;
+}
+</style>
+
+
+
+    <script>
+      const buttonEl =
+        document.querySelector('#df-b2f8fc66-c9e9-49a1-8469-6ca636288b2b button.colab-df-convert');
+      buttonEl.style.display =
+        google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+      async function convertToInteractive(key) {
+        const element = document.querySelector('#df-b2f8fc66-c9e9-49a1-8469-6ca636288b2b');
+        const dataTable =
+          await google.colab.kernel.invokeFunction('convertToInteractive',
+                                                    [key], {});
+        if (!dataTable) return;
+
+        const docLinkHtml = 'Like what you see? Visit the ' +
+          '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
+          + ' to learn more about interactive tables.';
+        element.innerHTML = '';
+        dataTable['output_type'] = 'display_data';
+        await google.colab.output.renderOutput(dataTable, element);
+        const docLink = document.createElement('div');
+        docLink.innerHTML = docLinkHtml;
+        element.appendChild(docLink);
+      }
+    </script>
+  </div>
+
+
+    <div id="df-43dc6036-f6fa-4bf4-b307-99e4c3788d9c">
+      <button class="colab-df-quickchart" onclick="quickchart('df-43dc6036-f6fa-4bf4-b307-99e4c3788d9c')"
+                title="Suggest charts"
+                style="display:none;">
+
+<svg xmlns="http://www.w3.org/2000/svg" height="24px"viewBox="0 0 24 24"
+     width="24px">
+    <g>
+        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+    </g>
+</svg>
+      </button>
+
+
+
+<style>
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+  line-height: 1.6;
+  padding: 2em;
+  max-width: 1200px;
+  margin: auto;
+}
+h1, h2, h3 {
+  color: #2c3e50;
+}
+table {
+  margin: 2em auto;
+  border-collapse: collapse;
+  width: 95%;
+  max-width: 100%;
+  font-variant-numeric: lining-nums tabular-nums;
+  display: table;
+  overflow-x: auto;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+th {
+  background-color: #3498db;
+  color: white;
+  padding: 0.75em;
+  text-align: center;
+}
+td {
+  border: 1px solid #ddd;
+  padding: 0.6em;
+  text-align: center;
+}
+.dataframe {
+  margin: 2em auto;
+  width: 95%;
+  overflow-x: auto;
+  display: block;
+  max-width: 100%;
+}
+div.output pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-x: auto;
+  max-width: 100%;
+}
+</style>
+
+
+
+      <script>
+        async function quickchart(key) {
+          const quickchartButtonEl =
+            document.querySelector('#' + key + ' button');
+          quickchartButtonEl.disabled = true;  // To prevent multiple clicks.
+          quickchartButtonEl.classList.add('colab-df-spinner');
+          try {
+            const charts = await google.colab.kernel.invokeFunction(
+                'suggestCharts', [key], {});
+          } catch (error) {
+            console.error('Error during call to suggestCharts:', error);
+          }
+          quickchartButtonEl.classList.remove('colab-df-spinner');
+          quickchartButtonEl.classList.add('colab-df-quickchart-complete');
+        }
+        (() => {
+          let quickchartButtonEl =
+            document.querySelector('#df-43dc6036-f6fa-4bf4-b307-99e4c3788d9c button');
+          quickchartButtonEl.style.display =
+            google.colab.kernel.accessAllowed ? 'block' : 'none';
+        })();
+      </script>
+    </div>
+
+    </div>
+  </div>
+
+</div>
+</div>
+<div class="cell markdown" id="jMf8p6mOEkZ-">
+<p>🧩 Contar quantos produtos há por Categoria (Category)</p>
+</div>
+<div class="cell code" data-execution_count="37"
+data-colab="{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;,&quot;height&quot;:551}"
+id="p9V45JyLHjr4" data-outputId="9ca2fbcb-616d-4cb2-d42d-2fad6deac45c">
+<div class="sourceCode" id="cb23"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_sql_query(<span class="st">&quot;&quot;&quot;</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="st">    SELECT Category, COUNT(*) AS Quantity</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="st">    FROM Products</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="st">    GROUP BY Category</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;&quot;&quot;</span>, con)</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>df</span></code></pre></div>
+<div class="output execute_result" data-execution_count="37">
+
+  <div id="df-342ad169-d17e-4bef-b025-4319306ef4bc" class="colab-df-container">
+    <div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Category</th>
+      <th>Quantity</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Bakery</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Basic Foods</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Beverages</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Cleaning</td>
+      <td>9</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Dairy</td>
+      <td>8</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>Deli</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>Household Items</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>Meats</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>Meats/Deli</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>Personal Care</td>
+      <td>10</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>Pet</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>Produce</td>
+      <td>14</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>Ready Foods</td>
+      <td>12</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>Snacks</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>Snacks/Desserts</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>Utensils/Disposables</td>
+      <td>7</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+    <div class="colab-df-buttons">
+
+  <div class="colab-df-container">
+    <button class="colab-df-convert" onclick="convertToInteractive('df-342ad169-d17e-4bef-b025-4319306ef4bc')"
+            title="Convert this dataframe to an interactive table."
+            style="display:none;">
+
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960">
+    <path d="M120-120v-720h720v720H120Zm60-500h600v-160H180v160Zm220 220h160v-160H400v160Zm0 220h160v-160H400v160ZM180-400h160v-160H180v160Zm440 0h160v-160H620v160ZM180-180h160v-160H180v160Zm440 0h160v-160H620v160Z"/>
+  </svg>
+    </button>
+
+  
+
+<style>
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+  line-height: 1.6;
+  padding: 2em;
+  max-width: 1200px;
+  margin: auto;
+}
+h1, h2, h3 {
+  color: #2c3e50;
+}
+table {
+  margin: 2em auto;
+  border-collapse: collapse;
+  width: 95%;
+  max-width: 100%;
+  font-variant-numeric: lining-nums tabular-nums;
+  display: table;
+  overflow-x: auto;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+th {
+  background-color: #3498db;
+  color: white;
+  padding: 0.75em;
+  text-align: center;
+}
+td {
+  border: 1px solid #ddd;
+  padding: 0.6em;
+  text-align: center;
+}
+.dataframe {
+  margin: 2em auto;
+  width: 95%;
+  overflow-x: auto;
+  display: block;
+  max-width: 100%;
+}
+div.output pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-x: auto;
+  max-width: 100%;
+}
+</style>
+
+
+
+    <script>
+      const buttonEl =
+        document.querySelector('#df-342ad169-d17e-4bef-b025-4319306ef4bc button.colab-df-convert');
+      buttonEl.style.display =
+        google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+      async function convertToInteractive(key) {
+        const element = document.querySelector('#df-342ad169-d17e-4bef-b025-4319306ef4bc');
+        const dataTable =
+          await google.colab.kernel.invokeFunction('convertToInteractive',
+                                                    [key], {});
+        if (!dataTable) return;
+
+        const docLinkHtml = 'Like what you see? Visit the ' +
+          '<a target="_blank" href=https://colab.research.google.com/notebooks/data_table.ipynb>data table notebook</a>'
+          + ' to learn more about interactive tables.';
+        element.innerHTML = '';
+        dataTable['output_type'] = 'display_data';
+        await google.colab.output.renderOutput(dataTable, element);
+        const docLink = document.createElement('div');
+        docLink.innerHTML = docLinkHtml;
+        element.appendChild(docLink);
+      }
+    </script>
+  </div>
+
+
+    <div id="df-80ec4c01-e08d-4f3a-8fb5-5f1f1b5ac5e4">
+      <button class="colab-df-quickchart" onclick="quickchart('df-80ec4c01-e08d-4f3a-8fb5-5f1f1b5ac5e4')"
+                title="Suggest charts"
+                style="display:none;">
+
+<svg xmlns="http://www.w3.org/2000/svg" height="24px"viewBox="0 0 24 24"
+     width="24px">
+    <g>
+        <path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/>
+    </g>
+</svg>
+      </button>
+
+
+
+<style>
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+  line-height: 1.6;
+  padding: 2em;
+  max-width: 1200px;
+  margin: auto;
+}
+h1, h2, h3 {
+  color: #2c3e50;
+}
+table {
+  margin: 2em auto;
+  border-collapse: collapse;
+  width: 95%;
+  max-width: 100%;
+  font-variant-numeric: lining-nums tabular-nums;
+  display: table;
+  overflow-x: auto;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+th {
+  background-color: #3498db;
+  color: white;
+  padding: 0.75em;
+  text-align: center;
+}
+td {
+  border: 1px solid #ddd;
+  padding: 0.6em;
+  text-align: center;
+}
+.dataframe {
+  margin: 2em auto;
+  width: 95%;
+  overflow-x: auto;
+  display: block;
+  max-width: 100%;
+}
+div.output pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-x: auto;
+  max-width: 100%;
+}
+</style>
+
+
+
+      <script>
+        async function quickchart(key) {
+          const quickchartButtonEl =
+            document.querySelector('#' + key + ' button');
+          quickchartButtonEl.disabled = true;  // To prevent multiple clicks.
+          quickchartButtonEl.classList.add('colab-df-spinner');
+          try {
+            const charts = await google.colab.kernel.invokeFunction(
+                'suggestCharts', [key], {});
+          } catch (error) {
+            console.error('Error during call to suggestCharts:', error);
+          }
+          quickchartButtonEl.classList.remove('colab-df-spinner');
+          quickchartButtonEl.classList.add('colab-df-quickchart-complete');
+        }
+        (() => {
+          let quickchartButtonEl =
+            document.querySelector('#df-80ec4c01-e08d-4f3a-8fb5-5f1f1b5ac5e4 button');
+          quickchartButtonEl.style.display =
+            google.colab.kernel.accessAllowed ? 'block' : 'none';
+        })();
+      </script>
+    </div>
+
+  <div id="id_fa5ecb55-8477-424f-8a89-17b9119d100b">
+    
+
+<style>
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #f9f9f9;
+  color: #333;
+  line-height: 1.6;
+  padding: 2em;
+  max-width: 1200px;
+  margin: auto;
+}
+h1, h2, h3 {
+  color: #2c3e50;
+}
+table {
+  margin: 2em auto;
+  border-collapse: collapse;
+  width: 95%;
+  max-width: 100%;
+  font-variant-numeric: lining-nums tabular-nums;
+  display: table;
+  overflow-x: auto;
+  background-color: white;
+  box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+th {
+  background-color: #3498db;
+  color: white;
+  padding: 0.75em;
+  text-align: center;
+}
+td {
+  border: 1px solid #ddd;
+  padding: 0.6em;
+  text-align: center;
+}
+.dataframe {
+  margin: 2em auto;
+  width: 95%;
+  overflow-x: auto;
+  display: block;
+  max-width: 100%;
+}
+div.output pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-x: auto;
+  max-width: 100%;
+}
+</style>
+
+
+    <button class="colab-df-generate" onclick="generateWithVariable('df')"
+            title="Generate code using this dataframe."
+            style="display:none;">
+
+  <svg xmlns="http://www.w3.org/2000/svg" height="24px"viewBox="0 0 24 24"
+       width="24px">
+    <path d="M7,19H8.4L18.45,9,17,7.55,7,17.6ZM5,21V16.75L18.45,3.32a2,2,0,0,1,2.83,0l1.4,1.43a1.91,1.91,0,0,1,.58,1.4,1.91,1.91,0,0,1-.58,1.4L9.25,21ZM18.45,9,17,7.55Zm-12,3A5.31,5.31,0,0,0,4.9,8.1,5.31,5.31,0,0,0,1,6.5,5.31,5.31,0,0,0,4.9,4.9,5.31,5.31,0,0,0,6.5,1,5.31,5.31,0,0,0,8.1,4.9,5.31,5.31,0,0,0,12,6.5,5.46,5.46,0,0,0,6.5,12Z"/>
+  </svg>
+    </button>
+    <script>
+      (() => {
+      const buttonEl =
+        document.querySelector('#id_fa5ecb55-8477-424f-8a89-17b9119d100b button.colab-df-generate');
+      buttonEl.style.display =
+        google.colab.kernel.accessAllowed ? 'block' : 'none';
+
+      buttonEl.onclick = () => {
+        google.colab.notebook.generateWithVariable('df');
+      }
+      })();
+    </script>
+  </div>
+
+    </div>
+  </div>
+
+</div>
+</div>
+<div class="cell markdown" id="IBmavgUefHUz">
+<hr />
+<h1 id="-antes-de-fechar-o-notebook">📥 Antes de fechar o notebook:</h1>
+<ul>
+<li>💾 Execute con.commit() para salvar tudo</li>
+<li>⛔ Execute con.close() para desconectar com segurança</li>
+<li><h2 id="️-confirme-que-o-arquivo-foi-salvo-no-google-drive">🗃️
+Confirme que o arquivo foi salvo no Google Drive</h2></li>
+</ul>
+</div>
+<div class="cell markdown" id="R8Vp6_n6-xcA">
+<p>💾 <strong>Salvar alterações no banco de dados</strong><br />
+Executamos <code>con.commit()</code> para confirmar as alterações e
+garantir que os dados fiquem salvos de forma permanente.</p>
+</div>
+<div class="cell code" data-execution_count="24"
+data-colab="{&quot;base_uri&quot;:&quot;https://localhost:8080/&quot;}"
+id="tUGQt-cT-3hL" data-outputId="6b91d744-42e0-446f-e184-1bce0b5c925a">
+<div class="sourceCode" id="cb24"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>con.commit()</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">&quot;✅ Dados importados com sucesso para o banco SQLite!&quot;</span>)</span></code></pre></div>
+<div class="output stream stdout">
+<pre><code>✅ Dados importados com sucesso para o banco SQLite!
+</code></pre>
+</div>
+</div>
+<section
+id="-executar-esta-célula-somente-ao-finalizar-todo-o-trabalho-com-o-banco-retirar-cometarios-"
+class="cell markdown" id="nyp07t-39g7w">
+<h3>🔒 Executar esta célula SOMENTE ao finalizar todo o trabalho com o
+banco. retirar cometarios (#)</h3>
+<p>🔌 <strong>Fechar a conexão com o banco</strong><br />
+Fechamos a conexão com o SQLite após terminar as operações, liberando
+recursos do sistema.</p>
+</section>
+<div class="cell code" id="m-PMpb4BrLRB">
+<div class="sourceCode" id="cb26"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 🔒 Fechar conexão com o banco de dados (só executar ao finalizar tudo)</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Use esta célula apenas quando terminar TODAS as edições e inserções no banco</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a><span class="co"># con.close()</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co"># print(&quot;✅ Banco de dados desconectado com sucesso.&quot;)</span></span></code></pre></div>
+</div>
+<div class="cell markdown" id="PCbdi5Dnqkm_">
+<hr />
+<h1 id="️-coisas-opcionais">⚙️ Coisas opcionais:</h1>
+<ul>
+<li>Fazer backup no GitHub</li>
+<li>Baixar o .db localmente</li>
+<li>Comentar o con.close() se quiser continuar testando</li>
+<li><h2
+id="deixar-este-checklist-visível-e-organizado-no-topo-do-notebook">Deixar
+este checklist visível e organizado no topo do notebook</h2></li>
+</ul>
+</div>
+<div class="cell markdown" id="fsk3QHy79oBI">
+<p>👨‍💻 <strong>Salvar no GitHub</strong><br />
+Após as alterações, podemos fazer backup do notebook e/ou do banco de
+dados, enviando-os para um repositório no GitHub como forma de controle
+de versão.</p>
+</div>
+<div class="cell code" data-cellView="form" id="CqWD-EjFrRgZ">
+<div class="sourceCode" id="cb27"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co"># @title</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="co">&#39;&#39;&#39;# ☁️ Etapa: Backup automático no GitHub (com token oculto)</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="co">from getpass import getpass  # Para ocultar a digitação do token</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="co">import shutil</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 🔐 Digitar token manualmente (não aparece na tela)</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="co">token = getpass(&quot;Digite seu GitHub Personal Access Token (oculto): &quot;)</span></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Seus dados do repositório</span></span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a><span class="co">usuario = &quot;italomellors&quot;</span></span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a><span class="co">repositorio = &quot;Data_Analysis_Projects&quot;</span></span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a><span class="co"># 🧲 Clonar o repositório (só uma vez por sessão)</span></span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a><span class="co">!git clone https://{token}:<a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="4a3267252b3f3e2267282b3923290a2d233e223f2864292527">[email&#160;protected]</a>/{usuario}/{repositorio}.git</span></span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a><span class="co"># 📂 Mudar para a pasta do repositório clonado</span></span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a><span class="co">%cd {repositorio}</span></span>
+<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a><span class="co"># 📁 Copiar o banco do Drive para o repositório local</span></span>
+<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a><span class="co">shutil.copy(&#39;/content/drive/MyDrive/Colab Notebooks/super_market/super_market.db&#39;, &#39;./super_market.db&#39;)</span></span>
+<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a><span class="co"># ✅ Git: Preparar, registrar e enviar os arquivos</span></span>
+<span id="cb27-24"><a href="#cb27-24" aria-hidden="true" tabindex="-1"></a><span class="co">!git status</span></span>
+<span id="cb27-25"><a href="#cb27-25" aria-hidden="true" tabindex="-1"></a><span class="co">!git add super_market.db</span></span>
+<span id="cb27-26"><a href="#cb27-26" aria-hidden="true" tabindex="-1"></a><span class="co">!git commit -m &quot;Backup automático do banco de dados SQLite&quot;</span></span>
+<span id="cb27-27"><a href="#cb27-27" aria-hidden="true" tabindex="-1"></a><span class="co">!git push&#39;&#39;&#39;</span></span></code></pre></div>
+</div>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"rayId":"93c4ac594cb7e0e2","version":"2025.4.0-1-g37f21b1","r":1,"token":"0357a45f23a943f08700f7f9af191ee6","serverTiming":{"name":{"cfExtPri":true,"cfL4":true,"cfSpeedBrain":true,"cfCacheStatus":true}}}' crossorigin="anonymous"></script>
+</body>
+</html>

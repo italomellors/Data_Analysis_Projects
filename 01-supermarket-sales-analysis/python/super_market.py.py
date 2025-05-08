@@ -46,6 +46,7 @@ Use `Shift+Enter` em cada célula para rodar individualmente.
 Ótimo para revisar ou testar partes do código.
 ____________________________________________________________________
 
+# 🛢 Criando o banco de dados 'super_market.db' 🛒💸💰
 # 👨‍💻 Iniciando: toda vez que abrir o notebook
 🌐 1. Montar o Google Drive: drive.mount('/content/drive')
 
@@ -93,7 +94,7 @@ import matplotlib.pyplot as plt   # Visualização de dados
 import seaborn as sns             # Visualização de dados
 
 """---
-# ✏️ Realizando alterações no código:
+# 🛢 Realizando alterações no Banco de dados ⚙️
 - Criar, consultar, inserir, atualizar e excluir dados
 - Usar pandas, seaborn, matplotlib para análises e visualizações
 - Sempre que fizer mudanças no banco, execute: con.commit()
@@ -180,6 +181,63 @@ df_produtos.head()  # Mostra as 5 primeiras linhas
 
 df_verificacao = pd.read_sql_query("SELECT * FROM Products", con)
 print(f'Total de registros inseridos: {len(df_verificacao)}')
+total_products_supermarket = len(df_verificacao)
+
+"""---
+# 🛢 Realizando consultas no banco de dados 🔍
+**📑Tabela: Products**
+- Nesta etapa, realizamos consultas SQL diretamente no banco de dados SQLite criado.
+- As consultas ajudam a explorar, analisar e extrair informações úteis dos dados armazenados,
+- facilitando a tomada de decisões e a visualização de padrões.
+- Abaixo, seguem consultas úteis para analisar os dados da tabela:
+---
+
+🔝 Ver os 10 primeiros produtos
+"""
+
+df_primeiros = pd.read_sql_query("SELECT * FROM Products ORDER BY OrderID ASC LIMIT 10", con)
+df_primeiros
+
+"""⬇️ Ver os 10 últimos produtos"""
+
+df_ultimos = pd.read_sql_query("SELECT * FROM Products ORDER BY OrderID DESC LIMIT 10", con)
+df_ultimos
+
+"""🎲 Ver 10 produtos aleatórios"""
+
+df_aleatorios = pd.read_sql_query("SELECT * FROM Products ORDER BY RANDOM() LIMIT 10", con)
+df_aleatorios
+
+"""📉 Ver os produtos com estoque abaixo de 20 unidades"""
+
+df = pd.read_sql_query("SELECT * FROM Products WHERE Stock < 20", con)
+df
+
+"""📊 Obter a média de preço de venda por categoria"""
+
+df = pd.read_sql_query("""
+    SELECT Category, AVG(Sale_Price) AS Avarage_Price
+    FROM Products
+    GROUP BY Category
+""", con)
+df
+
+"""💰 Ver produtos ordenados do mais caro para o mais barato (preço de venda)"""
+
+df = pd.read_sql_query("""
+    SELECT * FROM Products
+    ORDER BY Sale_Price DESC
+""", con)
+df.head(10)
+
+"""🧩 Contar quantos produtos há por Categoria (Category)"""
+
+df = pd.read_sql_query("""
+    SELECT Category, COUNT(*) AS Quantity
+    FROM Products
+    GROUP BY Category
+""", con)
+df
 
 """---
 # 📥 Antes de fechar o notebook:
@@ -206,7 +264,7 @@ Fechamos a conexão com o SQLite após terminar as operações, liberando recurs
 # print("✅ Banco de dados desconectado com sucesso.")
 
 """---
-# ⚙️ 5. Coisas opcionais:
+# ⚙️ Coisas opcionais:
 - Fazer backup no GitHub
 - Baixar o .db localmente
 - Comentar o con.close() se quiser continuar testando
